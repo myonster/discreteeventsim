@@ -1,9 +1,11 @@
+import java.util.function.Supplier;
+
 class Simulator {
     private final int numOfServers;
     private final ImList<Double> arrivalTimes;
-    private final ImList<Double> serviceTimes;
+    private final Supplier<Double> serviceTimes;
 
-    Simulator(int nos, ImList<Double> at, ImList<Double> st) {
+    Simulator(int nos, ImList<Double> at, Supplier<Double> st) {
         this.numOfServers = nos;
         this.arrivalTimes = at;
         this.serviceTimes = st;
@@ -23,7 +25,7 @@ class Simulator {
         PQ<Event> pqEvents = new PQ<Event>(new EventComp());
         for (int i = 0; i < arrivalTimes.size(); i++) {
             pqEvents = pqEvents.add(new ArriveEvent(
-                new Customer(i + 1, this.arrivalTimes.get(i), this.serviceTimes.get(i))));
+                new Customer(i + 1, this.arrivalTimes.get(i), this.serviceTimes)));
         }
 
         while (!pqEvents.isEmpty()) {

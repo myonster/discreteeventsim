@@ -1,9 +1,11 @@
+import java.util.function.Supplier;
+
 class Customer {
     private final int id;
     private final double arrivalTime;
-    private final double serviceTime;
+    private final Supplier<Double> serviceTime;
     
-    Customer(int id, int arrivalTime, int serviceTime) {
+    Customer(int id, double arrivalTime, Supplier<Double> serviceTime) {
         this.id = id;
         this.arrivalTime = arrivalTime;
         this.serviceTime = serviceTime;
@@ -14,7 +16,7 @@ class Customer {
     }
 
     double getServiceTime() {
-        return this.serviceTime;
+        return this.serviceTime.get();
     }
 
     @Override
