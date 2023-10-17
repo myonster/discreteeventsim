@@ -2,11 +2,13 @@ import java.util.function.Supplier;
 
 class Simulator {
     private final int numOfServers;
+    private final int qmax;
     private final ImList<Double> arrivalTimes;
     private final Supplier<Double> serviceTimes;
 
-    Simulator(int nos, ImList<Double> at, Supplier<Double> st) {
+    Simulator(int nos,int qmax, ImList<Double> at, Supplier<Double> st) {
         this.numOfServers = nos;
+        this.qmax = qmax;
         this.arrivalTimes = at;
         this.serviceTimes = st;
     }
