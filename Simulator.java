@@ -1,10 +1,14 @@
+import java.util.function.Supplier;
+
 class Simulator {
     private final int numOfServers;
+    private final int qmax;
     private final ImList<Double> arrivalTimes;
-    private final ImList<Double> serviceTimes;
+    private final Supplier<Double> serviceTimes;
 
-    Simulator(int nos, ImList<Double> at, ImList<Double> st) {
+    Simulator(int nos,int qmax, ImList<Double> at, Supplier<Double> st) {
         this.numOfServers = nos;
+        this.qmax = qmax;
         this.arrivalTimes = at;
         this.serviceTimes = st;
     }
@@ -15,19 +19,17 @@ class Simulator {
         int left = 0;
 
         //init shop with servers;
-        Shop shop = new Shop();
-        for (int i = 1; i <= this.numOfServers; i++) {
-            shop = shop.addServer(new Server(i));
-        }
+        Shop shop = new Shop(this.numOfServers, this.qmax);
 
         PQ<Event> pqEvents = new PQ<Event>(new EventComp());
         for (int i = 0; i < arrivalTimes.size(); i++) {
             pqEvents = pqEvents.add(new ArriveEvent(
-                new Customer(i + 1, this.arrivalTimes.get(i), this.serviceTimes.get(i))));
+                new Customer(i + 1, this.arrivalTimes.get(i), this.serviceTimes)));
         }
 
         while (!pqEvents.isEmpty()) {
             Event event = pqEvents.poll().first();
+            System.out.println(event.getTime() + "00 " + shop.toString());
             shop = event.updateShop(shop);
             output += event.toString() + "\n";
 
