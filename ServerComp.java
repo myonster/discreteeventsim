@@ -1,12 +1,15 @@
 import java.util.Comparator;
 
-class ServerComp implements Comparator<Server> {
+class ServerComp implements Comparator<ServerQueue> {
     
     @Override
-    public int compare(Server s1, Server s2) {
-        if (s1.getTime() > s2.getTime()) {
+    public int compare(ServerQueue sq1, ServerQueue sq2) {
+        Server s1 = sq1.getServer();
+        Server s2 = sq2.getServer();
+
+        if (sq1.getQueueSize() > sq2.getQueueSize()) {
             return 1;
-        } else if (s1.getTime() == s2.getTime()) {
+        } else if (sq1.getQueueSize() == sq2.getQueueSize()) {
             if (s1.getID() > s2.getID()) {
                 return 1;
             } 

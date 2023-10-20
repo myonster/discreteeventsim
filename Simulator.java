@@ -19,10 +19,7 @@ class Simulator {
         int left = 0;
 
         //init shop with servers;
-        Shop shop = new Shop();
-        for (int i = 1; i <= this.numOfServers; i++) {
-            shop = shop.addServer(new Server(i));
-        }
+        Shop shop = new Shop(this.numOfServers, this.qmax);
 
         PQ<Event> pqEvents = new PQ<Event>(new EventComp());
         for (int i = 0; i < arrivalTimes.size(); i++) {
@@ -32,6 +29,7 @@ class Simulator {
 
         while (!pqEvents.isEmpty()) {
             Event event = pqEvents.poll().first();
+            System.out.println(event.getTime() + "00 " + shop.toString());
             shop = event.updateShop(shop);
             output += event.toString() + "\n";
 

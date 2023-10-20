@@ -1,27 +1,32 @@
-class DoneEvent extends Event {
+class WaitEvent extends Event {
     private final ServerQueue serverQueue;
     
-    DoneEvent(Customer customer, ServerQueue serverQueue) {
-        super(customer, serverQueue.getServer().getTime());
+    WaitEvent(Customer customer, double time, ServerQueue serverQueue) {
+        super(customer, time);
         this.serverQueue = serverQueue;
     }
 
     @Override
     public Shop updateShop(Shop shop) {
         ServerQueue updatedSQ = this.serverQueue;
-        updatedSQ = updatedSQ.backAtCounter();
+        updatedSQ = updatedSQ.addToQueue();
+        updatedSQ = updatedSQ.addQueueTimeList(this.getCustomer().getServiceTime());
 
         return shop.updateServerQueueInShop(updatedSQ);
     }
 
     @Override
     public Event nextEvent(Shop shop) {
-        return this;
+        ServerQueue sq = shop.getServerQueueByID(this.serverQueue.
+            getServer().getID());
+        double time = sq.getLastTiming(); //HERE IS THE PROBLEM
+
+        return new ServeEvent(this.getCustomer(), time, sq);
     }
 
     @Override
     public boolean isDone() {
-        return true;
+        return false;
     }
 
     @Override
@@ -31,7 +36,7 @@ class DoneEvent extends Event {
     
     @Override
     public String toString() {
-        return String.format("%.3f %s done serving by %s",
+        return String.format("%.3f %s waits at %s",
             this.getTime(), this.getCustomer().toString(), this.serverQueue.getServer().toString());
     }
 

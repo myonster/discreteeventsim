@@ -1,39 +1,61 @@
 class Shop {
-    private final PQ<Server> servers;
-    //private final int served;
-    //private final int left;
+    private final ImList<ServerQueue> serverQueueShop;
 
-    Shop() {
-        this.servers = new PQ<Server>(new ServerComp());
+    Shop(int numOfServers, int qmax) {
+        ImList<ServerQueue> list = new ImList<ServerQueue>();
+        for (int i = 1; i <= numOfServers; i++) {
+            list = list.add(new ServerQueue(new Server(i), qmax));
+        }
+        this.serverQueueShop = list;
     }
 
-    Shop(Server server) {
-        this.servers = new PQ<Server>(new ServerComp()).add(server);
+    Shop(ImList<ServerQueue> serverQueueList) {
+        this.serverQueueShop = serverQueueList;
     }
 
-    Shop(PQ<Server> servers) {
-        this.servers = servers;
+    ServerQueue getServerQueueByID(int id) {
+        return this.serverQueueShop.get(id - 1);
     }
 
-    Server getServer() {
-        return this.servers.poll().first();
+    //this will update the serverQueue in the shop
+    Shop updateServerQueueInShop(ServerQueue serverQueue) {
+        ImList<ServerQueue> list = this.serverQueueShop;
+
+        return new Shop(list.set(serverQueue.getServer().getID() - 1, serverQueue));
     }
 
-    boolean isEmpty() {
-        return this.servers.isEmpty();
+    //if they are busy at all
+    boolean canServe() {
+        for (ServerQueue sq : this.serverQueueShop) {
+            if (sq.isAtCounter() || sq.canQueue()) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    Shop removeServer() {
-        return new Shop(this.servers.poll().second());
+    // finds the best sq from 1 to n
+    // first search is if they can serve
+    // second search is if they have a full queue
+    ServerQueue getServerQueue() {
+        for (ServerQueue sq : this.serverQueueShop) {
+            if (sq.isAtCounter()) {
+                return sq;
+            }
+        }
+
+        for (ServerQueue sq : this.serverQueueShop) {
+            if (sq.canQueue()) {
+                return sq;
+            }
+        }
+
+        return this.getServerQueueByID(0);
+
     }
 
-    Shop addServer(Server server) {
-        return new Shop(this.servers.add(server));
-    }
-    
     @Override
     public String toString() {
-        return this.servers.toString();
+        return this.serverQueueShop.toString();
     }
-
 }

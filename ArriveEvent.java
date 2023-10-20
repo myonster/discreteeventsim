@@ -6,9 +6,12 @@ class ArriveEvent extends Event {
 
     @Override
     public Event nextEvent(Shop shop) {
-        if (!shop.isEmpty()) {
-            if (super.time >= shop.getServer().getTime()) {
-                return new ServeEvent(this.getCustomer(), shop.getServer());
+        if (shop.canServe()) {
+            ServerQueue optimalServerQueue = shop.getServerQueue();
+            if (optimalServerQueue.isAtCounter()) {
+                return new ServeEvent(this.getCustomer(), this.getTime(), optimalServerQueue.addToQueue());
+            } else {
+                return new WaitEvent(this.getCustomer(), this.getTime(), optimalServerQueue);
             }
         }
         return new LeaveEvent(this.getCustomer());
