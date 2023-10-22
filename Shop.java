@@ -50,7 +50,7 @@ class Shop {
             }
         }
 
-        return this.getServerQueueByID(0);
+        return this.getServerQueueByID(1);
 
     }
 

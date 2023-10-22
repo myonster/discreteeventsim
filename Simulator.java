@@ -17,6 +17,7 @@ class Simulator {
         String output = "";
         int served = 0;
         int left = 0;
+        double waitTime = 0;
 
         //init shop with servers;
         Shop shop = new Shop(this.numOfServers, this.qmax);
@@ -29,7 +30,7 @@ class Simulator {
 
         while (!pqEvents.isEmpty()) {
             Event event = pqEvents.poll().first();
-            System.out.println(event.getTime() + "00 " + shop.toString());
+
             shop = event.updateShop(shop);
             output += event.toString() + "\n";
 
@@ -38,6 +39,15 @@ class Simulator {
                 
                 if (event.isServiceProvided()) {
                     served++;
+                    
+                    /* for test:
+                    System.out.println(event.getCustomer() + " arrived at: "+ event.getCustomer().getArrivalTime() + " servicing time: " + event.getCustomer().getServiceTime());
+                    System.out.println("finished serving at: " +shop.getServerQueue().getServer().getTime());
+                    */
+                    
+                    waitTime += shop.getServerQueue().getServer().getTime();
+                    waitTime -= event.getCustomer().getArrivalTime() + event.getCustomer().getServiceTime();
+
                 } else {
                     left++;
                 }
@@ -46,7 +56,8 @@ class Simulator {
                 pqEvents = pqEvents.poll().second().add(event.nextEvent(shop));
             }
         }
+        waitTime = waitTime / served;
 
-        return String.format("%s[%d %d]",output, served, left);
+        return String.format("%s[%.3f %d %d]",output, waitTime, served, left);
     }
 }

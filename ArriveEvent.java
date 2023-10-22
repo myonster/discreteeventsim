@@ -9,9 +9,11 @@ class ArriveEvent extends Event {
         if (shop.canServe()) {
             ServerQueue optimalServerQueue = shop.getServerQueue();
             if (optimalServerQueue.isAtCounter()) {
-                return new ServeEvent(this.getCustomer(), this.getTime(), optimalServerQueue.addToQueue());
+                return new ServeEvent(this.getCustomer(), this.getTime(),
+                    optimalServerQueue.addToQueue());
             } else {
-                return new WaitEvent(this.getCustomer(), this.getTime(), optimalServerQueue);
+                return new WaitEvent(this.getCustomer(), this.getTime(),
+                    optimalServerQueue);
             }
         }
         return new LeaveEvent(this.getCustomer());
