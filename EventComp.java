@@ -7,10 +7,9 @@ class EventComp implements Comparator<Event> {
         if ((e1.getTime() - e2.getTime()) > 0) {
             return 1;
         } else if ((e1.getTime() - e2.getTime()) == 0) {
-            if(e1.getCustomer().getArrivalTime() > e2.getCustomer().getArrivalTime()) {
+            if (e1.getCustomer().getArrivalTime() > e2.getCustomer().getArrivalTime()) {
                 return 1;
-            }
-            else {
+            } else {
                 return -1;
             }
         } else {
