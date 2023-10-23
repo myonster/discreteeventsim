@@ -41,8 +41,7 @@ class Simulator {
                     served++;
 
                     waitTime += shop.getServerQueue().getServer().getTime();
-                    waitTime -= event.getCustomer().getArrivalTime() 
-                        + event.getCustomer().getServiceTime();
+                    waitTime -= event.getTime();
 
                 } else {
                     left++;

@@ -1,16 +1,18 @@
 class WaitEvent extends Event {
     private final ServerQueue serverQueue;
+    private final double serviceTime;
     
     WaitEvent(Customer customer, double time, ServerQueue serverQueue) {
         super(customer, time);
         this.serverQueue = serverQueue;
+        this.serviceTime = customer.getServiceTime();
     }
 
     @Override
     public Shop updateShop(Shop shop) {
         ServerQueue updatedSQ = this.serverQueue;
         updatedSQ = updatedSQ.addToQueue();
-        updatedSQ = updatedSQ.addQueueTimeList(this.getCustomer().getServiceTime());
+        updatedSQ = updatedSQ.addQueueTimeList(this.serviceTime);
 
         return shop.updateServerQueueInShop(updatedSQ);
     }
@@ -21,7 +23,7 @@ class WaitEvent extends Event {
             .getServer().getID());
         double time = sq.getLastTiming(); //HERE IS THE PROBLEM
 
-        return new ServeEvent(this.getCustomer(), time, sq);
+        return new ServeEvent(this.getCustomer(), time, sq, this.serviceTime);
     }
 
     @Override
