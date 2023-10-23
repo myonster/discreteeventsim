@@ -1,18 +1,18 @@
 class ServeEvent extends Event {
     private final ServerQueue serverQueue;
-    private final double serviceTime;
+    //private final double serviceTime;
 
     ServeEvent(Customer customer, double time, ServerQueue serverQueue) {
         super(customer, time);
         this.serverQueue = serverQueue;
-        this.serviceTime = customer.getServiceTime();
+        //this.serviceTime = customer.getServiceTime();
     }
 
     @Override
     public Shop updateShop(Shop shop) {
         // takes out a server from a shop -> makes him busy
         ServerQueue updatedSQ = this.serverQueue;
-        updatedSQ = updatedSQ.serve(super.getTime() + this.serviceTime);
+        updatedSQ = updatedSQ.serve(super.getTime() + super.getCustomer().getServiceTime());
         updatedSQ = updatedSQ.notAtCounter();
         updatedSQ = updatedSQ.addWaitTime(super.getTime() - super.getCustomer().getArrivalTime());
 
