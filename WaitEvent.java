@@ -13,6 +13,8 @@ class WaitEvent extends Event {
         ServerQueue updatedSQ = this.serverQueue;
         updatedSQ = updatedSQ.addToQueue();
         updatedSQ = updatedSQ.addQueueTimeList(this.serviceTime);
+        updatedSQ = updatedSQ.addWaitTime(updatedSQ.getLastTiming()
+            - super.getCustomer().getArrivalTime());
 
         return shop.updateServerQueueInShop(updatedSQ);
     }

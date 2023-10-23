@@ -4,6 +4,7 @@ class ServerQueue {
     private final int qmax;
     private final boolean isAtCounter;
     private final ImList<Double> timeList;
+    private final double queueTime;
 
     ServerQueue(Server server, int qmax) {
         this.server = server;
@@ -11,14 +12,17 @@ class ServerQueue {
         this.queueSize = 0;
         this.isAtCounter = true;
         this.timeList = new ImList<Double>();
+        this.queueTime = 0;
     }
 
-    ServerQueue(Server server, int qmax, int queue, boolean status, ImList<Double> list) {
+    ServerQueue(Server server, int qmax, int queue, boolean status,
+        ImList<Double> list, double qtime) {
         this.server = server;
         this.qmax = qmax;
         this.queueSize = queue;
         this.isAtCounter = status;
         this.timeList = list;
+        this.queueTime = qtime;
     }
 
     int getQueueSize() {
@@ -41,6 +45,20 @@ class ServerQueue {
         return this.server;
     }
 
+    double getCurrentTiming() {
+        return this.timeList.get(this.timeList.size() - 1);
+    }
+
+    double getWaitTime() {
+        return this.queueTime;
+    }
+
+    ServerQueue addWaitTime(double time) {
+        return new ServerQueue(this.server, this.qmax, 
+            this.queueSize, false, this.timeList, this.queueTime + time);
+    }
+
+
     ServerQueue addQueueTimeList(double serviceTime) {
         ImList<Double> list = this.timeList;
 
@@ -52,37 +70,37 @@ class ServerQueue {
         }
 
         return new ServerQueue(this.server, this.qmax,
-            this.queueSize, this.isAtCounter, list);
+            this.queueSize, this.isAtCounter, list, this.queueTime);
     }
 
     ServerQueue notAtCounter() {
         return new ServerQueue(this.server, this.qmax, 
-            this.queueSize, false, this.timeList);
+            this.queueSize, false, this.timeList, this.queueTime);
     }
 
     ServerQueue backAtCounter() {
         return new ServerQueue(this.server, this.qmax,
-            this.queueSize, true, this.timeList);
+            this.queueSize, true, this.timeList, this.queueTime);
     }
 
     ServerQueue addToQueue() {
         return new ServerQueue(this.server, this.qmax, this.queueSize + 1,
-            this.isAtCounter, this.timeList);
+            this.isAtCounter, this.timeList, this.queueTime);
     }
 
     ServerQueue removeFromQueue() {
         return new ServerQueue(this.server, this.qmax, this.queueSize - 1,
-            this.isAtCounter, this.timeList);
+            this.isAtCounter, this.timeList, this.queueTime);
     }
 
     ServerQueue serve(double time) {
         return new ServerQueue(this.server.serve(time), this.qmax, this.queueSize,
-        this.isAtCounter, this.timeList);
+        this.isAtCounter, this.timeList, this.queueTime);
     }
 
     @Override
     public String toString() {
-        return String.format("Server: %s | (size,max): %d,%d | counter: %b",
-            this.server.toString(), this.queueSize, this.qmax, this.isAtCounter);
+        return String.format("Server: %s | (size,max): %d,%d | waitTime: %.3f",
+            this.server.toString(), this.queueSize, this.qmax, this.queueTime);
     }
 }

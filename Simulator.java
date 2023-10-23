@@ -39,10 +39,6 @@ class Simulator {
                 
                 if (event.isServiceProvided()) {
                     served++;
-
-                    waitTime += shop.getServerQueue().getServer().getTime();
-                    waitTime -= event.getTime();
-
                 } else {
                     left++;
                 }
@@ -51,6 +47,11 @@ class Simulator {
                 pqEvents = pqEvents.poll().second().add(event.nextEvent(shop));
             }
         }
+
+        for (ServerQueue i : shop.getList()) {
+            waitTime += i.getWaitTime();
+        }
+
         waitTime = waitTime / served;
 
         return String.format("%s[%.3f %d %d]",output, waitTime, served, left);

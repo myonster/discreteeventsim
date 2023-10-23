@@ -28,7 +28,7 @@ class ServeEvent extends Event {
     @Override
     public Event nextEvent(Shop shop) {
         return new DoneEvent(this.getCustomer(), 
-        shop.getServerQueueByID(this.serverQueue.getServer().getID()), this.serviceTime);
+        shop.getServerQueueByID(this.serverQueue.getServer().getID()));
     }
 
     @Override

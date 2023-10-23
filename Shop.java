@@ -54,6 +54,10 @@ class Shop {
 
     }
 
+    ImList<ServerQueue> getList() {
+        return this.serverQueueShop;
+    }
+
     @Override
     public String toString() {
         return this.serverQueueShop.toString();
