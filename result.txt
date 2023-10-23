@@ -1,0 +1,46 @@
+0.500 1 arrives
+0.500 1 serves by 1
+1.100 2 arrives
+1.100 2 serves by 2
+1.200 3 arrives
+1.200 3 waits at 1
+1.300 4 arrives
+1.300 4 waits at 1
+1.400 5 arrives
+11.400 5 waits at 1
+11.500 1 done serving by 1
+11.500 3 serves by 1
+11.500 6 arrives
+11.500 6 waits at 1
+11.600 7 arrives
+11.600 7 waits at 2
+11.700 8 arrives
+11.700 8 waits at 2
+11.800 9 arrives
+21.800 9 waits at 2
+21.900 10 arrives
+21.900 10 leaves
+22.500 3 done serving by 1
+22.500 4 serves by 1
+23.500 4 done serving by 1
+23.500 5 serves by 1
+24.500 5 done serving by 1
+24.500 6 serves by 1
+25.500 6 done serving by 1
+310.000 11 arrives
+310.000 11 serves by 1
+310.100 2 done serving by 2
+310.100 7 serves by 2
+311.000 11 done serving by 1
+311.000 12 arrives
+311.000 12 serves by 1
+311.100 7 done serving by 2
+311.100 8 serves by 2
+312.000 12 done serving by 1
+412.000 13 arrives
+412.000 13 serves by 1
+412.100 8 done serving by 2
+412.100 9 serves by 2
+422.000 13 done serving by 1
+422.100 9 done serving by 2
+4[2.900 12 1]
