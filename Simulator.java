@@ -42,12 +42,10 @@ class Simulator {
                 } else {
                     left++;
                 }
-
             } else {
                 pqEvents = pqEvents.poll().second().add(event.nextEvent(shop));
             }
         }
-
         for (ServerQueue i : shop.getList()) {
             waitTime += i.getWaitTime();
         }

@@ -12,8 +12,9 @@ class ServeEvent extends Event {
     public Shop updateShop(Shop shop) {
         // takes out a server from a shop -> makes him busy
         ServerQueue updatedSQ = this.serverQueue;
-        updatedSQ = updatedSQ.serve(this.getTime() + this.serviceTime);
+        updatedSQ = updatedSQ.serve(super.getTime() + this.serviceTime);
         updatedSQ = updatedSQ.notAtCounter();
+        updatedSQ = updatedSQ.addWaitTime(super.getTime() - super.getCustomer().getArrivalTime());
 
         return shop.updateServerQueueInShop(updatedSQ);
     }
@@ -36,7 +37,7 @@ class ServeEvent extends Event {
 
     @Override
     public String toString() {
-        return String.format("%.3f %s serves by %s \n",
+        return String.format("%.3f %s serves by %s\n",
             this.getTime(), this.getCustomer().toString(), this.serverQueue.getServer().toString());
     }
 }
