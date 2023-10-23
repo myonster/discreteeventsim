@@ -1,9 +1,122 @@
-2 3
-0.500 
-0.600 
-0.700 
-1.500 
-1.600 
-1.700
-1.800
-2.000
+<template>
+  <main class="propnews-page">
+    <header>
+      <h1>PropNews</h1>
+    </header>
+    <div v-if="loading">
+      Loading articles...
+    </div>
+    <div v-else>
+      <section>
+        <h2>Top News</h2>
+        <div class="article-card" v-for="article in filteredTopNews" :key="article.url">
+          <img :src="article.urlToImage" alt="Article Image" class="article-image" v-if="article.urlToImage">
+          <div class="article-content">
+            <h3>{{ article.title }}</h3>
+            <a :href="article.url" target="_blank">Read more</a>
+          </div>
+        </div>
+      </section>
+      <section>
+        <h2>Recent News</h2>
+        <div class="article-card" v-for="article in filteredRecentNews" :key="article.url">
+          <img :src="article.urlToImage" alt="Article Image" class="article-image" v-if="article.urlToImage">
+          <div class="article-content">
+            <h3>{{ article.title }}</h3>
+            <a :href="article.url" target="_blank">Read more</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      topNews: [],
+      recentNews: [],
+      loading: true,
+      apiKey: "573a1282e8ae449f88aae608370dc362",
+      keywords: ["Singapore", "Property", "Real Estate", "Home", "House", "Mortgage", "Developer"]
+    };
+  },
+  computed: {
+    filteredTopNews() {
+      return this.topNews.slice(0, 5);
+    },
+    filteredRecentNews() {
+      return this.recentNews.slice(0, 5);
+    }
+  },
+  async mounted() {
+    try {
+      // Fetch 'Top News' - sorted by popularity
+      const topNewsEndpoint = `https://newsapi.org/v2/everything?q=Singapore+Property&sortBy=popularity&apiKey=${this.apiKey}`;
+      const topNewsResponse = await fetch(topNewsEndpoint);
+      const topNewsData = await topNewsResponse.json();
+      this.topNews = topNewsData.articles.filter(article => 
+        this.keywords.some(keyword => 
+          (article.title && article.title.includes(keyword)) || 
+          (article.description && article.description.includes(keyword))
+        )
+      );
+
+      // Fetch 'Recent News' - sorted by publishedAt
+      const recentNewsEndpoint = `https://newsapi.org/v2/everything?q=Singapore+Property&sortBy=publishedAt&apiKey=${this.apiKey}`;
+      const recentNewsResponse = await fetch(recentNewsEndpoint);
+      const recentNewsData = await recentNewsResponse.json();
+      this.recentNews = recentNewsData.articles.filter(article => 
+        this.keywords.some(keyword => 
+          (article.title && article.title.includes(keyword)) || 
+          (article.description && article.description.includes(keyword))
+        )
+      );
+
+      this.loading = false;
+    } catch (error) {
+      console.error("Error fetching articles:", error);
+      this.loading = false;
+    }
+  }
+};
+</script>
+
+<style>
+  .propnews-page h2 {
+    padding-top: 10px;
+  }
+
+  .article-card {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 18px;
+    margin: 16px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .article-image {
+    max-width: 100px;
+    max-height: 100px;
+    margin-right: 20px;
+  }
+
+  .article-content {
+    flex: 1;
+  }
+
+  header {
+    text-align: center;
+    color: #333;
+    padding: 10px;
+  }
+
+  .error-message {
+    color: #ff0000;
+    text-align: center;
+  }
+</style>

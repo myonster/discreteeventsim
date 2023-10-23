@@ -1,4 +1,4 @@
-class LeaveEvent extends Event{
+class LeaveEvent extends Event {
     
     LeaveEvent(Customer customer) {
         super(customer, customer.getArrivalTime());
