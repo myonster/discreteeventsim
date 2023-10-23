@@ -32,7 +32,7 @@ class DoneEvent extends Event {
     
     @Override
     public String toString() {
-        return String.format("%.3f %s done serving by %s",
+        return String.format("%.3f %s done serving by %s\n",
             this.getTime(), this.getCustomer().toString(), this.serverQueue.getServer().toString());
     }
 

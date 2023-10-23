@@ -32,7 +32,7 @@ class Simulator {
             Event event = pqEvents.poll().first();
 
             shop = event.updateShop(shop);
-            output += event.toString() + "\n";
+            output += event.toString();
 
             if (event.isDone()) {
                 pqEvents = pqEvents.poll().second();

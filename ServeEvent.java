@@ -8,17 +8,10 @@ class ServeEvent extends Event {
         this.serviceTime = customer.getServiceTime();
     }
 
-    ServeEvent(Customer customer, double time, ServerQueue serverQueue, double serviceTime) {
-        super(customer, time);
-        this.serverQueue = serverQueue;
-        this.serviceTime = serviceTime;
-    }
-    
     @Override
     public Shop updateShop(Shop shop) {
         // takes out a server from a shop -> makes him busy
         ServerQueue updatedSQ = this.serverQueue;
-        updatedSQ = updatedSQ.removeFromQueue();
         updatedSQ = updatedSQ.serve(this.getTime() + this.serviceTime);
         updatedSQ = updatedSQ.notAtCounter();
 
@@ -43,7 +36,7 @@ class ServeEvent extends Event {
 
     @Override
     public String toString() {
-        return String.format("%.3f %s serves by %s",
+        return String.format("%.3f %s serves by %s \n",
             this.getTime(), this.getCustomer().toString(), this.serverQueue.getServer().toString());
     }
 }

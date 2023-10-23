@@ -36,7 +36,7 @@ class ArriveEvent extends Event {
 
     @Override
     public String toString() {
-        return String.format("%.3f %s arrives",
+        return String.format("%.3f %s arrives\n",
             this.getTime(), this.getCustomer().toString());
     }
 }

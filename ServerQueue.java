@@ -38,15 +38,11 @@ class ServerQueue {
     }
 
     double getLastTiming() {
-        return this.timeList.get(this.timeList.size() - 2);
+        return this.timeList.get(this.timeList.size() - 1);
     }
 
     Server getServer() {
         return this.server;
-    }
-
-    double getCurrentTiming() {
-        return this.timeList.get(this.timeList.size() - 1);
     }
 
     double getWaitTime() {
@@ -56,21 +52,6 @@ class ServerQueue {
     ServerQueue addWaitTime(double time) {
         return new ServerQueue(this.server, this.qmax, 
             this.queueSize, false, this.timeList, this.queueTime + time);
-    }
-
-
-    ServerQueue addQueueTimeList(double serviceTime) {
-        ImList<Double> list = this.timeList;
-
-        if (list.size() == 0) {
-            list = list.add(this.server.getTime());
-            list = list.add(this.server.getTime() + serviceTime);
-        } else {
-            list = list.add(this.timeList.get(this.timeList.size() - 1) + serviceTime);
-        }
-
-        return new ServerQueue(this.server, this.qmax,
-            this.queueSize, this.isAtCounter, list, this.queueTime);
     }
 
     ServerQueue notAtCounter() {
@@ -94,8 +75,8 @@ class ServerQueue {
     }
 
     ServerQueue serve(double time) {
-        return new ServerQueue(this.server.serve(time), this.qmax, this.queueSize,
-        this.isAtCounter, this.timeList, this.queueTime);
+        return new ServerQueue(this.server.serve(time), this.qmax, this.queueSize - 1,
+        this.isAtCounter, this.timeList.add(time), this.queueTime);
     }
 
     @Override
