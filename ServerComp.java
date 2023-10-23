@@ -12,8 +12,7 @@ class ServerComp implements Comparator<ServerQueue> {
         } else if (sq1.getQueueSize() == sq2.getQueueSize()) {
             if (s1.getID() > s2.getID()) {
                 return 1;
-            } 
-            else {
+            } else {
                 return -1;
             }
         } else {

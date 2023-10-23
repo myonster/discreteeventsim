@@ -39,14 +39,10 @@ class Simulator {
                 
                 if (event.isServiceProvided()) {
                     served++;
-                    
-                    /* for test:
-                    System.out.println(event.getCustomer() + " arrived at: "+ event.getCustomer().getArrivalTime() + " servicing time: " + event.getCustomer().getServiceTime());
-                    System.out.println("finished serving at: " +shop.getServerQueue().getServer().getTime());
-                    */
-                    
+
                     waitTime += shop.getServerQueue().getServer().getTime();
-                    waitTime -= event.getCustomer().getArrivalTime() + event.getCustomer().getServiceTime();
+                    waitTime -= event.getCustomer().getArrivalTime() 
+                        + event.getCustomer().getServiceTime();
 
                 } else {
                     left++;

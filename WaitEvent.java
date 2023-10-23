@@ -17,8 +17,8 @@ class WaitEvent extends Event {
 
     @Override
     public Event nextEvent(Shop shop) {
-        ServerQueue sq = shop.getServerQueueByID(this.serverQueue.
-            getServer().getID());
+        ServerQueue sq = shop.getServerQueueByID(this.serverQueue
+            .getServer().getID());
         double time = sq.getLastTiming(); //HERE IS THE PROBLEM
 
         return new ServeEvent(this.getCustomer(), time, sq);
