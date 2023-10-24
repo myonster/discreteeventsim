@@ -1,9 +1,17 @@
 class ServeEvent extends Event {
     private final ServerQueue serverQueue;
+    private final double serviceTime;
 
     ServeEvent(Customer customer, double time, ServerQueue serverQueue) {
         super(customer, time);
         this.serverQueue = serverQueue;
+        this.serviceTime = customer.getServiceTime();
+    }
+
+    ServeEvent(Customer customer, double time, ServerQueue serverQueue, double serviceTime) {
+        super(customer, time);
+        this.serverQueue = serverQueue;
+        this.serviceTime = serviceTime;
     }
     
     @Override
@@ -11,7 +19,7 @@ class ServeEvent extends Event {
         // takes out a server from a shop -> makes him busy
         ServerQueue updatedSQ = this.serverQueue;
         updatedSQ = updatedSQ.removeFromQueue();
-        updatedSQ = updatedSQ.serve(this.getTime() + this.getCustomer().getServiceTime());
+        updatedSQ = updatedSQ.serve(this.getTime() + this.serviceTime);
         updatedSQ = updatedSQ.notAtCounter();
 
         return shop.updateServerQueueInShop(updatedSQ);

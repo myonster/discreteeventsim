@@ -1,5 +1,6 @@
 class DoneEvent extends Event {
     private final ServerQueue serverQueue;
+
     
     DoneEvent(Customer customer, ServerQueue serverQueue) {
         super(customer, serverQueue.getServer().getTime());
