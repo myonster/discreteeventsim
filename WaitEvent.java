@@ -29,7 +29,6 @@ class WaitEvent extends Event {
                 return shop;
             }
         }
-
         //updatedSQ = updatedSQ.addWaitTime(updatedSQ.getLastTiming()
         //    - super.getCustomer().getArrivalTime());
 
@@ -45,13 +44,8 @@ class WaitEvent extends Event {
             if (sq.isAtCounter()) {
                 return new ServeEvent(super.getCustomer(), sq.getLastTiming(), sq);
             }
-            System.out.println( this.getTime() + " Waiting: " + super.getCustomer().toString() + " || " + shop.toString());
-            
-            System.out.println("This ServerQueue: " + this.serverQueue.toString() + "\n");
-
             return new WaitEvent(super.getCustomer(), sq.getLastTiming(), this.serverQueue, true);
         } else {
-            System.out.println(this.getTime() + " Waiting(Next to Serve) " + super.getCustomer().toString() + " || " + shop.toString() + "\n");
             return new ServeEvent(super.getCustomer(), sq.getLastTiming(), sq);
         }
     }

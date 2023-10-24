@@ -21,8 +21,6 @@ class ServeEvent extends Event {
         if (updatedSQ.getQueueSize() < 0) {
             updatedSQ = updatedSQ.addToQueue();
         }
-
-        System.out.println("Seving Shop state :" + shop.toString());   
         
         return shop.updateServerQueueInShop(updatedSQ);
     }

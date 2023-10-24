@@ -49,8 +49,9 @@ class Simulator {
         for (ServerQueue i : shop.getList()) {
             waitTime += i.getWaitTime();
         }
-
-        waitTime = waitTime / served;
+        if (served > 0) {
+            waitTime = waitTime / served;
+        }
 
         return String.format("%s[%.3f %d %d]",output, waitTime, served, left);
     }
