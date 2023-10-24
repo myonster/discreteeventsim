@@ -11,11 +11,19 @@ class ServeEvent extends Event {
     @Override
     public Shop updateShop(Shop shop) {
         // takes out a server from a shop -> makes him busy
-        ServerQueue updatedSQ = this.serverQueue;
+        ServerQueue sq = shop.getServerQueueByID(this.serverQueue.getServer().getID());     
+
+        ServerQueue updatedSQ =  sq; //this.serverQueue;
         updatedSQ = updatedSQ.serve(super.getTime() + super.getCustomer().getServiceTime());
         updatedSQ = updatedSQ.notAtCounter();
         updatedSQ = updatedSQ.addWaitTime(super.getTime() - super.getCustomer().getArrivalTime());
 
+        if (updatedSQ.getQueueSize() < 0) {
+            updatedSQ = updatedSQ.addToQueue();
+        }
+
+        System.out.println("Seving Shop state :" + shop.toString());   
+        
         return shop.updateServerQueueInShop(updatedSQ);
     }
 

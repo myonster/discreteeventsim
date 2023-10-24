@@ -9,7 +9,8 @@ class DoneEvent extends Event {
 
     @Override
     public Shop updateShop(Shop shop) {
-        ServerQueue updatedSQ = this.serverQueue;
+        ServerQueue sq = shop.getServerQueueByID(this.serverQueue.getServer().getID());
+        ServerQueue updatedSQ = sq; //this.serverQueue;
         updatedSQ = updatedSQ.backAtCounter();
 
         return shop.updateServerQueueInShop(updatedSQ);

@@ -17,11 +17,17 @@ class WaitEvent extends Event {
 
     @Override
     public Shop updateShop(Shop shop) {
+        /* */
         ServerQueue updatedSQ = this.serverQueue;
+        ServerQueue sq = shop.getServerQueueByID(this.serverQueue.getServer().getID());
         
         if (!this.isWaiting) {
             updatedSQ = updatedSQ.addToQueue();
             return shop.updateServerQueueInShop(updatedSQ);
+        } else {
+            if (sq.isAtCounter()) {
+                return shop;
+            }
         }
 
         //updatedSQ = updatedSQ.addWaitTime(updatedSQ.getLastTiming()
@@ -35,9 +41,17 @@ class WaitEvent extends Event {
         ServerQueue sq = shop.getServerQueueByID(this.serverQueue
             .getServer().getID());
 
-        if (sq.getQueueSize() > 1) {
+        if (sq.getQueueSize() >= 1) {
+            if (sq.isAtCounter()) {
+                return new ServeEvent(super.getCustomer(), sq.getLastTiming(), sq);
+            }
+            System.out.println( this.getTime() + " Waiting: " + super.getCustomer().toString() + " || " + shop.toString());
+            
+            System.out.println("This ServerQueue: " + this.serverQueue.toString() + "\n");
+
             return new WaitEvent(super.getCustomer(), sq.getLastTiming(), this.serverQueue, true);
         } else {
+            System.out.println(this.getTime() + " Waiting(Next to Serve) " + super.getCustomer().toString() + " || " + shop.toString() + "\n");
             return new ServeEvent(super.getCustomer(), sq.getLastTiming(), sq);
         }
     }
