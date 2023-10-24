@@ -32,7 +32,7 @@ class Simulator {
             Event event = pqEvents.poll().first();
 
             shop = event.updateShop(shop);
-            output += event.toString() + "\n";
+            output += event.toString();
 
             if (event.isDone()) {
                 pqEvents = pqEvents.poll().second();
@@ -42,17 +42,16 @@ class Simulator {
                 } else {
                     left++;
                 }
-
             } else {
                 pqEvents = pqEvents.poll().second().add(event.nextEvent(shop));
             }
         }
-
         for (ServerQueue i : shop.getList()) {
             waitTime += i.getWaitTime();
         }
-
-        waitTime = waitTime / served;
+        if (served > 0) {
+            waitTime = waitTime / served;
+        }
 
         return String.format("%s[%.3f %d %d]",output, waitTime, served, left);
     }

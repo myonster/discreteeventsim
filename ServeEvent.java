@@ -1,27 +1,27 @@
 class ServeEvent extends Event {
     private final ServerQueue serverQueue;
-    private final double serviceTime;
+    //private final double serviceTime;
 
     ServeEvent(Customer customer, double time, ServerQueue serverQueue) {
         super(customer, time);
         this.serverQueue = serverQueue;
-        this.serviceTime = customer.getServiceTime();
+        //this.serviceTime = customer.getServiceTime();
     }
 
-    ServeEvent(Customer customer, double time, ServerQueue serverQueue, double serviceTime) {
-        super(customer, time);
-        this.serverQueue = serverQueue;
-        this.serviceTime = serviceTime;
-    }
-    
     @Override
     public Shop updateShop(Shop shop) {
         // takes out a server from a shop -> makes him busy
-        ServerQueue updatedSQ = this.serverQueue;
-        updatedSQ = updatedSQ.removeFromQueue();
-        updatedSQ = updatedSQ.serve(this.getTime() + this.serviceTime);
-        updatedSQ = updatedSQ.notAtCounter();
+        ServerQueue sq = shop.getServerQueueByID(this.serverQueue.getServer().getID());     
 
+        ServerQueue updatedSQ =  sq; //this.serverQueue;
+        updatedSQ = updatedSQ.serve(super.getTime() + super.getCustomer().getServiceTime());
+        updatedSQ = updatedSQ.notAtCounter();
+        updatedSQ = updatedSQ.addWaitTime(super.getTime() - super.getCustomer().getArrivalTime());
+
+        if (updatedSQ.getQueueSize() < 0) {
+            updatedSQ = updatedSQ.addToQueue();
+        }
+        
         return shop.updateServerQueueInShop(updatedSQ);
     }
 
@@ -43,7 +43,7 @@ class ServeEvent extends Event {
 
     @Override
     public String toString() {
-        return String.format("%.3f %s serves by %s",
+        return String.format("%.3f %s serves by %s\n",
             this.getTime(), this.getCustomer().toString(), this.serverQueue.getServer().toString());
     }
 }

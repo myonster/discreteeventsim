@@ -25,7 +25,7 @@ class LeaveEvent extends Event {
 
     @Override
     public String toString() {
-        return String.format("%.3f %s leaves", 
+        return String.format("%.3f %s leaves\n", 
             this.getTime(), this.getCustomer().toString());
     }
 }

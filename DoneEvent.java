@@ -9,7 +9,8 @@ class DoneEvent extends Event {
 
     @Override
     public Shop updateShop(Shop shop) {
-        ServerQueue updatedSQ = this.serverQueue;
+        ServerQueue sq = shop.getServerQueueByID(this.serverQueue.getServer().getID());
+        ServerQueue updatedSQ = sq; //this.serverQueue;
         updatedSQ = updatedSQ.backAtCounter();
 
         return shop.updateServerQueueInShop(updatedSQ);
@@ -32,7 +33,7 @@ class DoneEvent extends Event {
     
     @Override
     public String toString() {
-        return String.format("%.3f %s done serving by %s",
+        return String.format("%.3f %s done serving by %s\n",
             this.getTime(), this.getCustomer().toString(), this.serverQueue.getServer().toString());
     }
 
