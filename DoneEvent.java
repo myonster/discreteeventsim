@@ -12,6 +12,7 @@ class DoneEvent extends Event {
         ServerQueue sq = shop.getServerQueueByID(this.serverQueue.getServer().getID());
         ServerQueue updatedSQ = sq; //this.serverQueue;
         updatedSQ = updatedSQ.backAtCounter();
+        updatedSQ = updatedSQ.rest();
 
         return shop.updateServerQueueInShop(updatedSQ);
     }

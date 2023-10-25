@@ -24,7 +24,7 @@ class Simulator {
         double waitTime = 0;
 
         //init shop with servers;
-        Shop shop = new Shop(this.numOfServers, this.qmax);
+        Shop shop = new Shop(this.numOfServers, this.qmax, this.restTimes);
 
         PQ<Event> pqEvents = new PQ<Event>(new EventComp());
         for (int i = 0; i < arrivalTimes.size(); i++) {

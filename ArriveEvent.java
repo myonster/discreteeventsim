@@ -8,7 +8,15 @@ class ArriveEvent extends Event {
     public Event nextEvent(Shop shop) {
         if (shop.canServe()) {
             ServerQueue optimalServerQueue = shop.getServerQueue();
+
             if (optimalServerQueue.isAtCounter()) {
+                
+                if (!optimalServerQueue.isTimeListEmpty()) {
+                    if (optimalServerQueue.getLastTiming() > this.getCustomer().getArrivalTime()) {
+                        return new WaitEvent(this.getCustomer(), this.getTime(),
+                        optimalServerQueue);
+                    }
+                }
                 return new ServeEvent(this.getCustomer(), this.getTime(),
                     optimalServerQueue.addToQueue());
             } else {

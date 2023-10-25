@@ -79,6 +79,24 @@ class ServerQueue {
         this.isAtCounter, this.timeList.add(time), this.queueTime);
     }
 
+    ServerQueue rest() {
+        double time = this.server.rest();
+        return new ServerQueue(this.server.serve(this.getServer().getTime() + time), 
+        this.qmax, this.queueSize,
+        this.isAtCounter, this.timeList.set(this.timeList.size() - 1, this.getLastTiming() + time),
+        this.queueTime);
+    }
+    ServerQueue rest(double time) {
+        return new ServerQueue(this.server.serve(this.getServer().getTime() + time), 
+        this.qmax, this.queueSize,
+        this.isAtCounter, this.timeList.set(0, this.getLastTiming() + time),
+        this.queueTime);
+    }
+
+    boolean isTimeListEmpty() {
+        return !(this.timeList.size() > 0);
+    }
+
     @Override
     public String toString() {
         return String.format("Server: %s | (size,max): %d,%d | waitTime: %.3f",
