@@ -12,9 +12,16 @@ class DoneEvent extends Event {
         ServerQueue sq = shop.getServerQueueByID(this.serverQueue.getServer().getID());
         ServerQueue updatedSQ = sq; //this.serverQueue;
         updatedSQ = updatedSQ.backAtCounter();
-        updatedSQ = updatedSQ.rest();
-
-        return shop.updateServerQueueInShop(updatedSQ);
+        System.out.println(this.getTime() + " Before rest: " +updatedSQ.getServer().getTime());
+        
+        double restTime = updatedSQ.getRest();
+        System.out.println(this.getTime() + " restTime: " + restTime);
+        if (restTime > 0) {
+            updatedSQ = updatedSQ.rest(restTime);
+        }
+        //System.out.println("[Done] " + this.getTime() + " Shop: " + shop.toString() + " || \n" + "ServerQueue: "  + updatedSQ.toString() + "\n");
+        System.out.println(this.getTime() + " After rest: " +updatedSQ.getServer().getTime() + "\n");
+        return shop.updateServerQueueInShop(updatedSQ); 
     }
 
     @Override

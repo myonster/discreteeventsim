@@ -23,12 +23,14 @@ class WaitEvent extends Event {
         
         if (!this.isWaiting) {
             updatedSQ = updatedSQ.addToQueue();
-            return shop.updateServerQueueInShop(updatedSQ);
-        } else {
-            if (sq.isAtCounter()) {
-                return shop;
+            if (updatedSQ.isAtCounter() && updatedSQ.isResting()) {
+                return shop.updateServerQueueInShop(updatedSQ.waitServeRest());
             }
+        
+            return shop.updateServerQueueInShop(updatedSQ);
         }
+
+
         //updatedSQ = updatedSQ.addWaitTime(updatedSQ.getLastTiming()
         //    - super.getCustomer().getArrivalTime());
 
@@ -40,10 +42,22 @@ class WaitEvent extends Event {
         ServerQueue sq = shop.getServerQueueByID(this.serverQueue
             .getServer().getID());
 
+        System.out.println("\n");
+        System.out.println(this.getTime() + " Customer " + this.getCustomer().toString() + " Waits");
+        System.out.println(this.getTime() +" Server Time: " + sq.getServer().getTime());
+        System.out.println(this.getTime() +" Customer Time: " + this.customer.getArrivalTime());
+        System.out.println(this.getTime() +" Server Last Time: " + sq.getLastTiming());
+        System.out.println(this.getTime() +" QueueSize: " + sq.getQueueSize());
+        System.out.println(this.getTime() +" isResting: " + sq.isResting());
+
+        //System.out.println("[Wait] " + this.getTime() + " Shop: " + shop.toString() + " || \n" + "ServerQueue: "  + sq.toString() + "\n");
+
         if (sq.getQueueSize() >= 1) {
             if (sq.isAtCounter()) {
-                return new ServeEvent(super.getCustomer(), sq.getLastTiming(), sq);
+                if (sq.getServer().getTime() >= this.getCustomer().getArrivalTime()) {
+                    return new ServeEvent(super.getCustomer(), sq.getLastTiming(), sq);}
             }
+            System.out.println("Wait again \n");
             return new WaitEvent(super.getCustomer(), sq.getLastTiming(), this.serverQueue, true);
         } else {
             return new ServeEvent(super.getCustomer(), sq.getLastTiming(), sq);

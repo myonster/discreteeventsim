@@ -6,9 +6,29 @@ class ArriveEvent extends Event {
 
     @Override
     public Event nextEvent(Shop shop) {
-        if (shop.canServe()) {
-            ServerQueue optimalServerQueue = shop.getServerQueue();
 
+        if (shop.canServe()) {
+            for (ServerQueue sq : shop.getList()) {
+                if (sq.isAtCounter()) {
+                    if (!sq.isResting()) {
+                        return new ServeEvent(this.getCustomer(), this.getTime(),
+                            sq.addToQueue());
+
+                    } else if (sq.getServer().getTime() <= this.getCustomer().getArrivalTime()) {
+                        
+                        return new ServeEvent(this.getCustomer(), this.getTime(),
+                            sq.addToQueue());
+                    }
+                }
+            }
+
+            for (ServerQueue sq : shop.getList()) {
+                if (sq.canQueue()) {
+                    return new WaitEvent(this.getCustomer(), this.getTime(), sq);
+                }
+            }
+
+            /* 
             if (optimalServerQueue.isAtCounter()) {
                 
                 if (!optimalServerQueue.isTimeListEmpty()) {
@@ -23,6 +43,7 @@ class ArriveEvent extends Event {
                 return new WaitEvent(this.getCustomer(), this.getTime(),
                     optimalServerQueue);
             }
+            */
         }
         return new LeaveEvent(this.getCustomer());
     }
