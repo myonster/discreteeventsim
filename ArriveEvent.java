@@ -6,6 +6,7 @@ class ArriveEvent extends Event {
 
     @Override
     public Event nextEvent(Shop shop) {
+        System.out.println(this.getTime() + "Arrive Event: " + shop.toString());
 
         if (shop.canServe()) {
             for (ServerQueue sq : shop.getList()) {
