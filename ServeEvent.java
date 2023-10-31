@@ -18,6 +18,10 @@ class ServeEvent extends Event {
         updatedSQ = updatedSQ.notAtCounter();
         updatedSQ = updatedSQ.addWaitTime(super.getTime() - super.getCustomer().getArrivalTime());
 
+        System.out.println("\n");
+        System.out.println(this.getTime() + " SERVING : " + shop.toString());
+        System.out.println(this.getTime() + " resting ? : " + updatedSQ.isResting());
+
         if (updatedSQ.getQueueSize() < 0) {
             updatedSQ = updatedSQ.addToQueue();
         }

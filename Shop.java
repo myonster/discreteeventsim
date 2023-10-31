@@ -1,10 +1,12 @@
+import java.util.function.Supplier;
+
 class Shop {
     private final ImList<ServerQueue> serverQueueShop;
 
-    Shop(int numOfServers, int qmax) {
+    Shop(int numOfServers, int qmax, Supplier<Double> restTimes) {
         ImList<ServerQueue> list = new ImList<ServerQueue>();
         for (int i = 1; i <= numOfServers; i++) {
-            list = list.add(new ServerQueue(new Server(i), qmax));
+            list = list.add(new ServerQueue(new Server(i, restTimes), qmax));
         }
         this.serverQueueShop = list;
     }

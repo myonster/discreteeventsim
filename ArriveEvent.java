@@ -6,15 +6,45 @@ class ArriveEvent extends Event {
 
     @Override
     public Event nextEvent(Shop shop) {
+        System.out.println(this.getTime() + "Arrive Event: " + shop.toString());
+
         if (shop.canServe()) {
-            ServerQueue optimalServerQueue = shop.getServerQueue();
+            for (ServerQueue sq : shop.getList()) {
+                if (sq.isAtCounter()) {
+                    if (!sq.isResting()) {
+                        return new ServeEvent(this.getCustomer(), this.getTime(),
+                            sq.addToQueue());
+
+                    } else if (sq.getServer().getTime() <= this.getCustomer().getArrivalTime()) {
+                        
+                        return new ServeEvent(this.getCustomer(), this.getTime(),
+                            sq.addToQueue());
+                    }
+                }
+            }
+
+            for (ServerQueue sq : shop.getList()) {
+                if (sq.canQueue()) {
+                    return new WaitEvent(this.getCustomer(), this.getTime(), sq);
+                }
+            }
+
+            /* 
             if (optimalServerQueue.isAtCounter()) {
+                
+                if (!optimalServerQueue.isTimeListEmpty()) {
+                    if (optimalServerQueue.getLastTiming() > this.getCustomer().getArrivalTime()) {
+                        return new WaitEvent(this.getCustomer(), this.getTime(),
+                        optimalServerQueue);
+                    }
+                }
                 return new ServeEvent(this.getCustomer(), this.getTime(),
                     optimalServerQueue.addToQueue());
             } else {
                 return new WaitEvent(this.getCustomer(), this.getTime(),
                     optimalServerQueue);
             }
+            */
         }
         return new LeaveEvent(this.getCustomer());
     }
