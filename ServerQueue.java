@@ -32,19 +32,7 @@ class ServerQueue {
     boolean canQueue() {
         return this.getQueueSize() < this.qmax;
     }
-
-    boolean isAtCounter() {
-        return this.isAtCounter;
-    }
-
-    double getLastTiming() {
-        return this.timeList.get(this.timeList.size() - 1);
-    }
-
-    Server getServer() {
-        return this.server;
-    }
-
+    
     double getWaitTime() {
         return this.queueTime;
     }
