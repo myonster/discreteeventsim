@@ -8,7 +8,9 @@ class Simulator {
     private final Supplier<Double> serviceTimes;
     private final Supplier<Double> restTimes;
 
-    Simulator(int nos, int nosc, int qmax, ImList<Double> at, Supplier<Double> st, Supplier<Double> rt) {
+    Simulator(int nos, int nosc, int qmax, ImList<Double> at, 
+        Supplier<Double> st, Supplier<Double> rt) {
+
         this.numOfServers = nos;
         this.numOfSelfChecks = nosc;
         this.qmax = qmax;

@@ -27,7 +27,9 @@ class Main {
             arrivalTimes = arrivalTimes.add(sc.nextDouble());
         }
 
-        Simulator sim = new Simulator(numOfServers, numOfSelfChecks, qmax, arrivalTimes, serviceTimes, restTimes);
+        Simulator sim = new Simulator(numOfServers, numOfSelfChecks, qmax,
+            arrivalTimes, serviceTimes, restTimes);
+
         System.out.println(sim.simulate());
         sc.close();
     }
