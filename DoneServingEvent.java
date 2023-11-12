@@ -15,7 +15,7 @@ class DoneServingEvent extends Event {
         ServerQueue servingServerQueue = shop.get(serverIndex);
 
         
-        servingServerQueue = servingServerQueue.doneServe(); //this is a heavy operation
+        //servingServerQueue = servingServerQueue.doneServe(); //this is a heavy operation
         newShop = newShop.set(serverIndex, servingServerQueue);
 
         Server doneServer = servingServerQueue.getServer();
@@ -57,7 +57,7 @@ class DoneServingEvent extends Event {
             return new RestEvent(super.getCustomer(), servedServer.getNextTime(), servedServer);
         }
 
-        return new DoneEvent(super.getCustomer(), super.getTime());
+        return new DoneEvent(super.getCustomer(), super.getTime(), servedServer);
     }
 
     @Override

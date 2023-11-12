@@ -1,12 +1,23 @@
 class DoneEvent extends Event {
+    private final Server server;
     
-    DoneEvent(Customer customer, double time) {
+    DoneEvent(Customer customer, double time, Server server) {
         super(customer, time);
+        this.server = server;
     }
     
     @Override
     public ImList<ServerQueue> updateShop(ImList<ServerQueue> shop) {
-        return shop;
+        int serverIndex = this.server.getID() - 1;
+        ImList<ServerQueue> newShop = shop;
+
+        ServerQueue servingServerQueue = shop.get(serverIndex);
+
+        servingServerQueue = servingServerQueue.doneServe(); //this is a heavy operation
+        newShop = newShop.set(serverIndex, servingServerQueue);
+
+        return newShop;
+
     }
 
     @Override

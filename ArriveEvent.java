@@ -23,7 +23,23 @@ class ArriveEvent extends Event {
             }
         }
 
+        // Looks at which is empty from 1 -> n (Regardeless of if Server is Resting)
+        // for (ServerQueue sq: shop) {
+        //     if (sq.getQueue().isEmpty()) {
+        //         int serverIndex = sq.getServer().getID() - 1;
+
+        //         //This is where we slot in our Customer into ServerQueue
+        //         //System.out.println("is empty");
+
+        //         tempShop = tempShop.set(serverIndex, sq.addToQueue(super.getCustomer()));
+        //         return tempShop;
+
+        //     }
+        // }
+
         // Looks at which one can serve? (Regardeless of if Server is Resting)
+        //boolean ableToServe = false;
+
         for (ServerQueue sq: shop) {
             if (sq.ableToServe()) {
                 int serverIndex = sq.getServer().getID() - 1;
@@ -34,7 +50,6 @@ class ArriveEvent extends Event {
                 return tempShop;
             }
         }
-
         // System.out.println("we left");
         // when we do this -> essentially customer is not added in!
         return shop;

@@ -45,7 +45,7 @@ class WaitEvent extends Event {
             } else {
                 //System.out.println(server.toString() + " is going to serve customer " + 
                 //customerID + " at " + server.getNextTime());
-                return new ServeEvent(super.getCustomer(), server.getNextTime(), server);
+                return new ServeEvent(super.getCustomer(), super.getTime(), server);
             }
 
         }

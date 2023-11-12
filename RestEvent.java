@@ -30,7 +30,7 @@ class RestEvent extends Event {
 
     @Override
     public Event nextEvent(ImList<ServerQueue> shop) {
-        return new DoneEvent(super.getCustomer(), super.getTime());
+        return new DoneEvent(super.getCustomer(), super.getTime(), this.server);
     }
 
     @Override
