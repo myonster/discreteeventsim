@@ -1,7 +1,7 @@
 class RestEvent extends Event {
     private final Server server;
 
-    RestEvent (Customer customer, double time, Server server) {
+    RestEvent(Customer customer, double time, Server server) {
         super(customer, time);
         this.server = server;
     }
@@ -32,12 +32,12 @@ class RestEvent extends Event {
     }
 
     @Override
-    public boolean isDone(){
+    public boolean isDone() {
         return false;
     }
 
     @Override
-    public boolean isServiceProvided(){
+    public boolean isServiceProvided() {
         return true;
     }
 

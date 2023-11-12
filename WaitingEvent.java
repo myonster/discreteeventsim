@@ -6,7 +6,6 @@ class WaitingEvent extends WaitEvent {
 
     @Override
     public String toString() {
-
-    return "";
+        return "";
     }
 }

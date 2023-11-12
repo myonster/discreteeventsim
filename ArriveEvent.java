@@ -54,7 +54,7 @@ class ArriveEvent extends Event {
                 if (customerID == customer.getID()) {
                     inShop = true;
                     customerPosition = customerQueue.indexOf(customer); // 0 if its at front
-                    System.out.println(customerPosition); 
+                    //System.out.println(customerPosition); 
                     servingSQ = sq;
                     break;
                 }
@@ -82,12 +82,12 @@ class ArriveEvent extends Event {
 
 
     @Override
-    public boolean isDone(){
+    public boolean isDone() {
         return false;
     }
 
     @Override
-    public boolean isServiceProvided(){
+    public boolean isServiceProvided() {
         return false;
     }
 

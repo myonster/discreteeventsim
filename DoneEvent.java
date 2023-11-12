@@ -1,6 +1,6 @@
 class DoneEvent extends Event {
     
-    DoneEvent (Customer customer, double time) {
+    DoneEvent(Customer customer, double time) {
         super(customer, time);
     }
     
@@ -20,7 +20,7 @@ class DoneEvent extends Event {
     }
 
     @Override
-    public boolean isServiceProvided(){
+    public boolean isServiceProvided() {
         return true;
     }
 

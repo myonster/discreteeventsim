@@ -3,7 +3,8 @@ class ServerQueue {
     private final Pair<Server, ImList<Customer>> serverQueuePair;
     private final int maxQueueSize;
 
-    // Note Server Template is -> Server(int id, double nextTime, boolean isServing, boolean isResting)
+    // Note Server Template is 
+    // -> Server(int id, double nextTime, boolean isServing, boolean isResting)
 
     ServerQueue(Pair<Server, ImList<Customer>> serverQueue, int qmax) {
         this.serverQueuePair = serverQueue;

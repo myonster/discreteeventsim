@@ -8,7 +8,6 @@ class WaitEvent extends Event {
 
     @Override
     public ImList<ServerQueue> updateShop(ImList<ServerQueue> shop) {
-
         return shop;
     }
 
@@ -58,9 +57,7 @@ class WaitEvent extends Event {
     
     @Override
     public String toString() {
-
-    return String.format("%.3f %s waits at %s\n",
-        super.getTime(), super.getCustomer().toString(), this.server.toString());
+        return String.format("%.3f %s waits at %s\n",
+            super.getTime(), super.getCustomer().toString(), this.server.toString());
     }
-    
 }

@@ -15,12 +15,12 @@ class LeaveEvent extends Event {
     }
 
     @Override
-    public boolean isDone(){
+    public boolean isDone() {
         return true;
     }
 
     @Override
-    public boolean isServiceProvided(){
+    public boolean isServiceProvided() {
         return false;
     }
 

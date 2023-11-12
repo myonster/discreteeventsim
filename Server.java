@@ -15,12 +15,12 @@ class Server {
         this.restTime = restTime;
     }
 
-    Server(int id, double nextTime, boolean isServing, boolean isResting, Supplier<Double> restTime) {
+    Server(int id, double nextTime, boolean isServing, boolean isResting, Supplier<Double> rt) {
         this.id = id;
         this.nextTime = nextTime;
         this.isServing = isServing;
         this.isResting = isResting;
-        this.restTime = restTime;
+        this.restTime = rt;
     }
 
     int getID() {
