@@ -8,11 +8,12 @@ class ServeEvent extends Event {
 
     @Override
     public ImList<ServerQueue> updateShop(ImList<ServerQueue> shop) {
-
+        
         int serverIndex = this.server.getID() - 1;
         ImList<ServerQueue> newShop = shop;
 
         ServerQueue servingServerQueue = shop.get(serverIndex);
+        System.out.println(servingServerQueue.getQueue());
 
         servingServerQueue = servingServerQueue.serve();
         newShop = newShop.set(serverIndex, servingServerQueue);
