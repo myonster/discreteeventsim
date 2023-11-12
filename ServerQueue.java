@@ -44,7 +44,7 @@ class ServerQueue {
     ServerQueue addToQueue(Customer customer) {
         //catching bug
         if (!this.ableToServe()) {
-            System.out.println("ADDING TO QUEUE EVEN WHEN WE CANT SERVE");
+            //System.out.println("ADDING TO QUEUE EVEN WHEN WE CANT SERVE");
             return this;
         }
         

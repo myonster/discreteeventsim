@@ -66,7 +66,7 @@ class ArriveEvent extends Event {
         if (inShop) {
             if (customerPosition == 0) {
                 if (server.isResting()) {
-                    return new WaitRestEvent(super.getCustomer(), super.getTime(), server);
+                    return new WaitEvent(super.getCustomer(), super.getTime(), server);
                 } else {
                     return new ServeEvent(super.getCustomer(), super.getTime(), server);
                 }

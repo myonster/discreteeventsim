@@ -1,9 +1,17 @@
 class WaitEvent extends Event {
     protected final Server server;
+    private final boolean echo;
 
     WaitEvent(Customer customer, double time, Server server) {
         super(customer, time);
         this.server = server;
+        this.echo = true;
+    }
+
+    WaitEvent(Customer customer, double time, Server server, boolean status) {
+        super(customer, time);
+        this.server = server;
+        this.echo = false;
     }
 
     @Override
@@ -33,7 +41,7 @@ class WaitEvent extends Event {
 
         if (customerPosition == 0) {
             if (server.isResting()) {
-                return new WaitingEvent(super.getCustomer(), server.getNextTime(), server);
+                return new WaitEvent(super.getCustomer(), server.getNextTime(), server, false);
             } else {
                 //System.out.println(server.toString() + " is going to serve customer " + 
                 //customerID + " at " + server.getNextTime());
@@ -42,7 +50,7 @@ class WaitEvent extends Event {
 
         }
 
-        return new WaitingEvent(super.getCustomer(), server.getNextTime(), server);
+        return new WaitEvent(super.getCustomer(), server.getNextTime(), server, false);
     }
 
     @Override
@@ -57,6 +65,10 @@ class WaitEvent extends Event {
     
     @Override
     public String toString() {
+        if (!this.echo) {
+            return "";
+        }
+
         return String.format("%.3f %s waits at %s\n",
             super.getTime(), super.getCustomer().toString(), this.server.toString());
     }
