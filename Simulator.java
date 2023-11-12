@@ -26,7 +26,16 @@ class Simulator {
         double waitTime = 0;
 
         //init shop with servers;
-        Shop shop = new Shop(this.numOfServers, this.qmax, this.restTimes);
+        ImList<ServerQueue> shop = new ImList<ServerQueue>();
+        
+        for (int i = 1; i <= numOfServers; i++) {
+            ImList<Customer> emptyQueue = new ImList<Customer>();
+            Pair<Server, ImList<Customer>> serverQueuePair = new Pair<Server, ImList<Customer>>(
+                new Server(i), emptyQueue);
+
+            shop = shop.add(new ServerQueue(serverQueuePair, this.qmax));
+        }
+
 
         PQ<Event> pqEvents = new PQ<Event>(new EventComp());
         for (int i = 0; i < arrivalTimes.size(); i++) {
@@ -52,12 +61,12 @@ class Simulator {
                 pqEvents = pqEvents.poll().second().add(event.nextEvent(shop));
             }
         }
-        for (ServerQueue i : shop.getList()) {
-            waitTime += i.getWaitTime();
-        }
-        if (served > 0) {
-            waitTime = waitTime / served;
-        }
+        // for (ServerQueue i : shop.getList()) {
+        //     waitTime += i.getWaitTime();
+        // }
+        // if (served > 0) {
+        //     waitTime = waitTime / served;
+        // }
 
         return String.format("%s[%.3f %d %d]",output, waitTime, served, left);
     }

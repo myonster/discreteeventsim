@@ -67,6 +67,4 @@ class ServerQueue {
     boolean isEmpty() {
         return this.getQueue().isEmpty();
     }
-
-
 }

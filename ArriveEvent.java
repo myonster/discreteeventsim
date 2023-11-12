@@ -1,7 +1,7 @@
 class ArriveEvent extends Event {
     
-    ArriveEvent(Customer customer, double time) {
-        super(customer, time);
+    ArriveEvent(Customer customer) {
+        super(customer, customer.getArrivalTime());
     }
     
     @Override

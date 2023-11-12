@@ -38,8 +38,6 @@ class Server {
         return new Server(this.id, this.nextTime + time, this.isServing(), this.isResting());
     }
 
-
-
     @Override
     public String toString() {
         return String.format("%s", this.id);
