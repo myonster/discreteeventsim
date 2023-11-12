@@ -9,6 +9,7 @@ class ServeEvent extends Event {
     @Override
     public ImList<ServerQueue> updateShop(ImList<ServerQueue> shop) {
         
+
         int serverIndex = this.server.getID() - 1;
         ImList<ServerQueue> newShop = shop;
 
@@ -42,6 +43,7 @@ class ServeEvent extends Event {
 
     @Override
     public String toString() {
+
         return String.format("%.3f %s serves by %s\n",
             this.getTime(), this.getCustomer().toString(), this.server.toString());
     }    

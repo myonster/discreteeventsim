@@ -23,7 +23,9 @@ class DoneServingEvent extends Event {
         int maxQueueSize = servingServerQueue.getMaxQueueSize();
 
         double restTime = doneServer.getRestTime();
-
+        System.out.println(super.getTime() + " rest time is: " + restTime);
+        System.out.println(super.getTime() + " Server " + doneServer.toString() + " nextTime is " + doneServer.getNextTime());
+        
         if (restTime > 0) {
             doneServer = doneServer.updateRestingStatus(true);
             doneServer = doneServer.addTime(super.getTime() + restTime);
@@ -31,6 +33,8 @@ class DoneServingEvent extends Event {
                 new Pair<Server, ImList<Customer>>(doneServer, doneQueue), maxQueueSize);
             
             newShop = newShop.set(serverIndex, servingServerQueue);
+            System.out.println(super.getTime() + " Server " + doneServer.toString() + " nextTime after rest is \n" + doneServer.getNextTime());
+
             return newShop;
         }
 
@@ -44,8 +48,6 @@ class DoneServingEvent extends Event {
 
         ServerQueue servedServerQueue = shop.get(serverIndex);
         Server servedServer = servedServerQueue.getServer();
-
-        double nextTime = servedServer.getNextTime();
 
         if (servedServer.isResting()) {
             return new RestEvent(super.getCustomer(), servedServer.getNextTime(), servedServer);

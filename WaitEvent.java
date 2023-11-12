@@ -32,10 +32,12 @@ class WaitEvent extends Event {
             }
         }
 
-        if (customerPosition == 1) {
-            if (false) {
-                return new ServeEvent(super.getCustomer(), server.getNextTime(), server);
+        if (customerPosition == 0) {
+            if (server.isResting()) {
+                return new WaitingEvent(super.getCustomer(), server.getNextTime(), server);
             } else {
+                //System.out.println(server.toString() + " is going to serve customer " + 
+                //customerID + " at " + server.getNextTime());
                 return new ServeEvent(super.getCustomer(), server.getNextTime(), server);
             }
 
