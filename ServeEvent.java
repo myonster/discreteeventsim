@@ -1,37 +1,35 @@
 class ServeEvent extends Event {
-    private final Server server;
+    private final int serverID;
 
-    ServeEvent(Customer customer, double time, Server server) {
+    ServeEvent(Customer customer, double time, int serverID) {
         super(customer, time);
-        this.server = server;
+        this.serverID = serverID;
     }
 
     @Override
-    public ImList<ServerQueue> updateShop(ImList<ServerQueue> shop) {
+    public ImList<QueueSystem> updateShop(ImList<QueueSystem> shop) {
         
 
-        int serverIndex = this.server.getID() - 1;
-        ImList<ServerQueue> newShop = shop;
+        ImList<QueueSystem> newShop = shop;
 
-        ServerQueue servingServerQueue = shop.get(serverIndex);
+        QueueSystem servingQueueSystem = shop.get(this.serverID - 1);
 
-        servingServerQueue = servingServerQueue.serve(super.getTime());
-        servingServerQueue = servingServerQueue
+        servingQueueSystem = servingQueueSystem.serve(super.getTime());
+        servingQueueSystem = servingQueueSystem
             .addWaitTime(super.getTime() - super.getCustomer().getArrivalTime());
 
-        newShop = newShop.set(serverIndex, servingServerQueue);
+        newShop = newShop.set(serverID - 1, servingQueueSystem);
 
         return newShop;
     }
 
     @Override
-    public Event nextEvent(ImList<ServerQueue> shop) {
-        int serverIndex = this.server.getID() - 1;
+    public Event nextEvent(ImList<QueueSystem> shop) {
 
-        ServerQueue servingServerQueue = shop.get(serverIndex);
-        double nextTime = servingServerQueue.getServer().getNextTime();
+        QueueSystem servingQueueSystem = shop.get(this.serverID - 1);
+        double nextTime = servingQueueSystem.getServer().getNextTime();
 
-        return new DoneServingEvent(super.getCustomer(), nextTime, servingServerQueue.getServer());
+        return new DoneServingEvent(super.getCustomer(), nextTime, this.serverID);
     }
 
     @Override
@@ -47,7 +45,7 @@ class ServeEvent extends Event {
     @Override
     public String toString() {
 
-        return String.format("%.3f %s serves by %s\n",
-            this.getTime(), this.getCustomer().toString(), this.server.toString());
+        return String.format("%.3f %s serves by %d\n",
+            this.getTime(), this.getCustomer().toString(), this.serverID);
     }    
 }

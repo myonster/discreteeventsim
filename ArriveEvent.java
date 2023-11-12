@@ -5,16 +5,16 @@ class ArriveEvent extends Event {
     }
     
     @Override
-    public ImList<ServerQueue> updateShop(ImList<ServerQueue> shop) {
-        ImList<ServerQueue> tempShop = shop;//new ImList<ServerQueue>();
+    public ImList<QueueSystem> updateShop(ImList<QueueSystem> shop) {
+        ImList<QueueSystem> tempShop = shop;//new ImList<QueueSystem>();
 
         // Customer that arrives will look at shop
         // Looks at which is empty from 1 -> n (Regardeless of if Server is Resting)
-        for (ServerQueue sq: shop) {
+        for (QueueSystem sq: shop) {
             if (sq.isEmpty()) {
                 int serverIndex = sq.getServer().getID() - 1;
 
-                //This is where we slot in our Customer into ServerQueue
+                //This is where we slot in our Customer into QueueSystem
                 //System.out.println("is empty");
 
                 tempShop = tempShop.set(serverIndex, sq.addToQueue(super.getCustomer()));
@@ -24,11 +24,11 @@ class ArriveEvent extends Event {
         }
 
         // Looks at which is empty from 1 -> n (Regardeless of if Server is Resting)
-        // for (ServerQueue sq: shop) {
+        // for (QueueSystem sq: shop) {
         //     if (sq.getQueue().isEmpty()) {
         //         int serverIndex = sq.getServer().getID() - 1;
 
-        //         //This is where we slot in our Customer into ServerQueue
+        //         //This is where we slot in our Customer into QueueSystem
         //         //System.out.println("is empty");
 
         //         tempShop = tempShop.set(serverIndex, sq.addToQueue(super.getCustomer()));
@@ -40,11 +40,11 @@ class ArriveEvent extends Event {
         // Looks at which one can serve? (Regardeless of if Server is Resting)
         //boolean ableToServe = false;
 
-        for (ServerQueue sq: shop) {
+        for (QueueSystem sq: shop) {
             if (sq.ableToServe()) {
                 int serverIndex = sq.getServer().getID() - 1;
 
-                //This is where we slot in our Customer into ServerQueue
+                //This is where we slot in our Customer into QueueSystem
 
                 tempShop = tempShop.set(serverIndex, sq.addToQueue(super.getCustomer()));
                 return tempShop;
@@ -56,14 +56,14 @@ class ArriveEvent extends Event {
     }
 
     @Override
-    public Event nextEvent(ImList<ServerQueue> shop) {
+    public Event nextEvent(ImList<QueueSystem> shop) {
         int customerID = super.getCustomer().getID();
         int customerPosition = 0;
-        ServerQueue servingSQ = shop.get(0);
+        QueueSystem servingSQ = shop.get(0);
         boolean inShop = false;
 
         // Searching where our customer is
-        for (ServerQueue sq: shop) {
+        for (QueueSystem sq: shop) {
             ImList<Customer> customerQueue = sq.getQueue();
             for (Customer customer: customerQueue) {
                 if (customerID == customer.getID()) {
@@ -77,17 +77,18 @@ class ArriveEvent extends Event {
         }
         
         Server server = servingSQ.getServer();
+        int serverIndex = server.getID();
 
         if (inShop) {
             if (customerPosition == 0) {
                 if (server.isResting()) {
-                    return new WaitEvent(super.getCustomer(), super.getTime(), server);
+                    return new WaitEvent(super.getCustomer(), super.getTime(), serverIndex);
                 } else {
-                    return new ServeEvent(super.getCustomer(), super.getTime(), server);
+                    return new ServeEvent(super.getCustomer(), super.getTime(), serverIndex);
                 }
 
             } else {
-                return new WaitEvent(super.getCustomer(), super.getTime(), server);
+                return new WaitEvent(super.getCustomer(), super.getTime(), serverIndex);
             }
         }
 

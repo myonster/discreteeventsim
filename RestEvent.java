@@ -1,36 +1,36 @@
 class RestEvent extends Event {
-    private final Server server;
+    private final int serverID;
 
-    RestEvent(Customer customer, double time, Server server) {
+    RestEvent(Customer customer, double time, int serverID) {
         super(customer, time);
-        this.server = server;
+        this.serverID = serverID;
     }
     
     @Override
-    public ImList<ServerQueue> updateShop(ImList<ServerQueue> shop) {
-        int serverIndex = this.server.getID() - 1;
-        ImList<ServerQueue> newShop = shop;
+    public ImList<QueueSystem> updateShop(ImList<QueueSystem> shop) {
+        int serverIndex = this.serverID - 1;
+        ImList<QueueSystem> newShop = shop;
 
-        ServerQueue servingServerQueue = shop.get(serverIndex);
+        QueueSystem servingQueueSystem = shop.get(serverIndex);
 
-        Server doneServer = servingServerQueue.getServer();
-        ImList<Customer> doneQueue = servingServerQueue.getQueue();
-        int maxQueueSize = servingServerQueue.getMaxQueueSize();
-        double waitTime = servingServerQueue.getWaitTime();
+        Server doneServer = servingQueueSystem.getServer();
+        ImList<Customer> doneQueue = servingQueueSystem.getQueue();
+        int maxQueueSize = servingQueueSystem.getMaxQueueSize();
+        double waitTime = servingQueueSystem.getWaitTime();
 
         doneServer = doneServer.updateRestingStatus(false);
 
-        servingServerQueue = new ServerQueue(
+        servingQueueSystem = new ServerQueue(
             new Pair<Server, ImList<Customer>>(doneServer, doneQueue),
             maxQueueSize, waitTime);
         
-        newShop = newShop.set(serverIndex, servingServerQueue);
+        newShop = newShop.set(serverIndex, servingQueueSystem);
         return newShop;
     }
 
     @Override
-    public Event nextEvent(ImList<ServerQueue> shop) {
-        return new DoneEvent(super.getCustomer(), super.getTime(), this.server);
+    public Event nextEvent(ImList<QueueSystem> shop) {
+        return new DoneEvent(super.getCustomer(), super.getTime(), this.serverID);
     }
 
     @Override

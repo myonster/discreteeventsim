@@ -1,27 +1,26 @@
 class DoneServingEvent extends Event {
-    private final Server server;
+    private final int serverID;
 
-    DoneServingEvent(Customer customer, double time, Server server) {
+    DoneServingEvent(Customer customer, double time, int serverID) {
         super(customer, time);
-        this.server = server;
+        this.serverID = serverID;
     }
     
     @Override
-    public ImList<ServerQueue> updateShop(ImList<ServerQueue> shop) {
+    public ImList<QueueSystem> updateShop(ImList<QueueSystem> shop) {
         
-        int serverIndex = this.server.getID() - 1;
-        ImList<ServerQueue> newShop = shop;
+        ImList<QueueSystem> newShop = shop;
 
-        ServerQueue servingServerQueue = shop.get(serverIndex);
+        QueueSystem servingQueueSystem = shop.get(this.serverID - 1);
 
         
-        //servingServerQueue = servingServerQueue.doneServe(); //this is a heavy operation
-        newShop = newShop.set(serverIndex, servingServerQueue);
+        //servingQueueSystem = servingQueueSystem.doneServe(); //this is a heavy operation
+        newShop = newShop.set(this.serverID - 1, servingQueueSystem);
 
-        Server doneServer = servingServerQueue.getServer();
-        ImList<Customer> doneQueue = servingServerQueue.getQueue();
-        int maxQueueSize = servingServerQueue.getMaxQueueSize();
-        double waitTime = servingServerQueue.getWaitTime();
+        Server doneServer = servingQueueSystem.getServer();
+        ImList<Customer> doneQueue = servingQueueSystem.getQueue();
+        int maxQueueSize = servingQueueSystem.getMaxQueueSize();
+        double waitTime = servingQueueSystem.getWaitTime();
 
         double restTime = doneServer.getRestTime();
         //System.out.println(super.getTime() + " rest time is: " + restTime);
@@ -31,11 +30,11 @@ class DoneServingEvent extends Event {
         if (restTime > 0) {
             doneServer = doneServer.updateRestingStatus(true);
             doneServer = doneServer.addTime(super.getTime() + restTime);
-            servingServerQueue = new ServerQueue(
+            servingQueueSystem = new ServerQueue(
                 new Pair<Server, ImList<Customer>>(doneServer, doneQueue),
                 maxQueueSize, waitTime);
             
-            newShop = newShop.set(serverIndex, servingServerQueue);
+            newShop = newShop.set(serverID - 1, servingQueueSystem);
             //System.out.println(super.getTime() + " Server " + doneServer.toString() 
             //    + " nextTime after rest is \n" + doneServer.getNextTime());
 
@@ -46,18 +45,16 @@ class DoneServingEvent extends Event {
     }
 
     @Override
-    public Event nextEvent(ImList<ServerQueue> shop) {
+    public Event nextEvent(ImList<QueueSystem> shop) {
 
-        int serverIndex = this.server.getID() - 1;
-
-        ServerQueue servedServerQueue = shop.get(serverIndex);
-        Server servedServer = servedServerQueue.getServer();
+        QueueSystem servedQueueSystem = shop.get(serverID - 1);
+        Server servedServer = servedQueueSystem.getServer();
 
         if (servedServer.isResting()) {
-            return new RestEvent(super.getCustomer(), servedServer.getNextTime(), servedServer);
+            return new RestEvent(super.getCustomer(), servedServer.getNextTime(), this.serverID);
         }
 
-        return new DoneEvent(super.getCustomer(), super.getTime(), servedServer);
+        return new DoneEvent(super.getCustomer(), super.getTime(), this.serverID);
     }
 
     @Override
@@ -72,8 +69,8 @@ class DoneServingEvent extends Event {
     
     @Override
     public String toString() {
-        return String.format("%.3f %s done serving by %s\n",
-            super.getTime(), super.getCustomer().toString(), this.server.toString());
+        return String.format("%.3f %s done serving by %d\n",
+            super.getTime(), super.getCustomer().toString(), this.serverID);
     }
 
 }

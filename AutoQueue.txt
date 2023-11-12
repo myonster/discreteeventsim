@@ -1,27 +1,31 @@
-class ServerQueue implements QueueSystem {
-    //this is basically a pair class on steroids
-    private final Pair<Server, ImList<Customer>> serverQueuePair;
+class AutoQueue implements QueueSystem {
+
+    private final int headId; //
+    private final Pair<ImList<Server>, ImList<Customer>> pairOfList;
     private final int maxQueueSize;
     private final double totalWaitTime;
-
+    //this is basically a pair class on steroids
     // Note Server Template is 
     // -> Server(int id, double nextTime, boolean isServing, boolean isResting)
-
-    @Override
-    public boolean isAutomated() {
-        return false;
-    }
-
-    ServerQueue(Pair<Server, ImList<Customer>> serverQueue, int qmax) {
-        this.serverQueuePair = serverQueue;
+    AutoQueue(Pair<ImList<Server>, ImList<Customer>> pol, int qmax) {
+        this.pairOfList = pol;
         this.maxQueueSize = qmax;
         this.totalWaitTime = 0;
     }
 
-    ServerQueue(Pair<Server, ImList<Customer>> serverQueue, int qmax, double wt) {
-        this.serverQueuePair = serverQueue;
+    AutoQueue(Pair<ImList<Server>, ImList<Customer>> pol, int qmax, double wt) {
+        this.pairOfList = pol;
         this.maxQueueSize = qmax;
         this.totalWaitTime = wt;
+    }
+
+    //utility function
+    
+
+    
+    @Override
+    public boolean isAutomated() {
+        return true;
     }
 
     @Override
@@ -46,7 +50,7 @@ class ServerQueue implements QueueSystem {
 
     @Override
     public QueueSystem addWaitTime(double time) {
-        return new ServerQueue(this.serverQueuePair,
+        return new AutoQueue(this.serverQueuePair,
             this.maxQueueSize, this.totalWaitTime + time);
     }
 
@@ -115,12 +119,14 @@ class ServerQueue implements QueueSystem {
     }
 
     //just nobody there at the queue
-    @Override
-    public boolean isEmpty() {
+    boolean isEmpty() {
         if (this.getServer().isResting()) {
             return false;
         }
 
         return this.getQueue().isEmpty();
     }
+}
+
+
 }

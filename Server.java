@@ -6,6 +6,7 @@ class Server {
     private final boolean isServing;
     private final boolean isResting;
     private final Supplier<Double> restTime;
+    private final boolean human;
 
     Server(int id, Supplier<Double> restTime) {
         this.id = id;
@@ -13,6 +14,7 @@ class Server {
         this.isServing = false;
         this.isResting = false;
         this.restTime = restTime;
+        this.human = true;
     }
 
     Server(int id, double nextTime, boolean isServing, boolean isResting, Supplier<Double> rt) {
@@ -21,6 +23,17 @@ class Server {
         this.isServing = isServing;
         this.isResting = isResting;
         this.restTime = rt;
+        this.human = true;
+    }
+
+    //Constructor for AI
+    Server(int id, Supplier<Double> restTime, boolean ai) {
+        this.id = id;
+        this.nextTime = 0;
+        this.isServing = false;
+        this.isResting = false;
+        this.restTime = restTime;
+        this.human = ai;
     }
 
     int getID() {
@@ -57,6 +70,10 @@ class Server {
 
     @Override
     public String toString() {
+        if (!this.human) {
+            return String.format("self-check %s", this.id);
+        }
+
         return String.format("%s", this.id);
     }
 }

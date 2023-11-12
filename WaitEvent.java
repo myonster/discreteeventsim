@@ -1,35 +1,34 @@
 class WaitEvent extends Event {
-    protected final Server server;
+    protected final int serverID;
     private final boolean echo;
 
-    WaitEvent(Customer customer, double time, Server server) {
+    WaitEvent(Customer customer, double time, int serverID) {
         super(customer, time);
-        this.server = server;
+        this.serverID = serverID;
         this.echo = true;
     }
 
-    WaitEvent(Customer customer, double time, Server server, boolean status) {
+    WaitEvent(Customer customer, double time, int serverID, boolean status) {
         super(customer, time);
-        this.server = server;
+        this.serverID = serverID;
         this.echo = false;
     }
 
     @Override
-    public ImList<ServerQueue> updateShop(ImList<ServerQueue> shop) {
+    public ImList<QueueSystem> updateShop(ImList<QueueSystem> shop) {
         return shop;
     }
 
     @Override
-    public Event nextEvent(ImList<ServerQueue> shop) {
+    public Event nextEvent(ImList<QueueSystem> shop) {
         int customerID = super.getCustomer().getID();
-        int serverIndex = this.server.getID() - 1;
 
         int customerPosition = 0;
-        ServerQueue servingSQ = shop.get(serverIndex);
+        QueueSystem servingSQ = shop.get(this.serverID - 1);
         
         Server server = servingSQ.getServer();
 
-        for (ServerQueue sq: shop) {
+        for (QueueSystem sq: shop) {
             ImList<Customer> customerQueue = sq.getQueue();
             for (Customer customer: customerQueue) {
                 if (customerID == customer.getID()) {
@@ -41,16 +40,17 @@ class WaitEvent extends Event {
 
         if (customerPosition == 0) {
             if (server.isResting()) {
-                return new WaitEvent(super.getCustomer(), server.getNextTime(), server, false);
+                return new WaitEvent(super.getCustomer(), server.getNextTime(),
+                    this.serverID, false);
             } else {
                 //System.out.println(server.toString() + " is going to serve customer " + 
                 //customerID + " at " + server.getNextTime());
-                return new ServeEvent(super.getCustomer(), super.getTime(), server);
+                return new ServeEvent(super.getCustomer(), super.getTime(), this.serverID);
             }
 
         }
 
-        return new WaitEvent(super.getCustomer(), server.getNextTime(), server, false);
+        return new WaitEvent(super.getCustomer(), server.getNextTime(), this.serverID, false);
     }
 
     @Override
@@ -69,7 +69,7 @@ class WaitEvent extends Event {
             return "";
         }
 
-        return String.format("%.3f %s waits at %s\n",
-            super.getTime(), super.getCustomer().toString(), this.server.toString());
+        return String.format("%.3f %s waits at %d\n",
+            super.getTime(), super.getCustomer().toString(), this.serverID);
     }
 }

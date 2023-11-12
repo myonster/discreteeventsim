@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Compile all the Java files
-javac ImList.java Pair.java PQ.java Customer.java Server.java Event.java ArriveEvent.java LeaveEvent.java ServeEvent.java WaitEvent.java DoneServingEvent.java DoneEvent.java RestEvent.java EventComp.java Simulator.java Main.java DefaultServiceTime.java
+javac ImList.java Pair.java PQ.java Customer.java Server.java QueueSystem.java ServerQueue.java Event.java ArriveEvent.java LeaveEvent.java ServeEvent.java WaitEvent.java DoneServingEvent.java DoneEvent.java RestEvent.java EventComp.java Simulator.java Main.java DefaultServiceTime.java
 
 # Check if the compilation was successful
 if [ $? -ne 0 ]; then

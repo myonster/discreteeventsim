@@ -5,12 +5,12 @@ class LeaveEvent extends Event {
     }
     
     @Override
-    public ImList<ServerQueue> updateShop(ImList<ServerQueue> shop) {
+    public ImList<QueueSystem> updateShop(ImList<QueueSystem> shop) {
         return shop;
     }
 
     @Override
-    public Event nextEvent(ImList<ServerQueue> shop) {
+    public Event nextEvent(ImList<QueueSystem> shop) {
         return this;
     }
 

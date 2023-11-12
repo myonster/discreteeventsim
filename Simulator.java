@@ -26,7 +26,7 @@ class Simulator {
         double waitTime = 0;
 
         //init shop with servers;
-        ImList<ServerQueue> shop = new ImList<ServerQueue>();
+        ImList<QueueSystem> shop = new ImList<QueueSystem>();
         
         for (int i = 1; i <= numOfServers; i++) {
             ImList<Customer> emptyQueue = new ImList<Customer>();
@@ -35,6 +35,16 @@ class Simulator {
 
             shop = shop.add(new ServerQueue(serverQueuePair, this.qmax));
         }
+
+        // // FOR SELF CHECK SERVERS
+        // for (int i = 1; i <= numOfSelfChecks; i++) {
+        //     ImList<Customer> emptyQueue = new ImList<Customer>();
+            
+        //     Pair<Server, ImList<Customer>> serverQueuePair = new Pair<Server, ImList<Customer>>(
+        //         new AutoServer(numOfServers + i, this.restTimes), emptyQueue);
+
+        //     shop = shop.add(new ServerQueue(serverQueuePair, 1000));
+        // }
 
         PQ<Event> pqEvents = new PQ<Event>(new EventComp());
         for (int i = 0; i < arrivalTimes.size(); i++) {
@@ -59,7 +69,7 @@ class Simulator {
                 pqEvents = pqEvents.poll().second().add(event.nextEvent(shop));
             }
         }
-        for (ServerQueue i : shop) {
+        for (QueueSystem i : shop) {
             waitTime += i.getWaitTime();
         }
         if (served > 0) {
