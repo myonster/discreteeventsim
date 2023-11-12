@@ -11,7 +11,7 @@ class ArriveEvent extends Event {
         // Customer that arrives will look at shop
         // Looks at which is empty from 1 -> n (Regardeless of if Server is Resting)
         for (ServerQueue sq: shop) {
-            if (sq.getQueue().isEmpty()) {
+            if (sq.isEmpty()) {
                 int serverIndex = sq.getServer().getID() - 1;
 
                 //This is where we slot in our Customer into ServerQueue
@@ -66,7 +66,7 @@ class ArriveEvent extends Event {
         if (inShop) {
             if (customerPosition == 0) {
                 if (server.isResting()) {
-                    return new ServeEvent(super.getCustomer(), server.getNextTime(), server);
+                    return new WaitRestEvent(super.getCustomer(), super.getTime(), server);
                 } else {
                     return new ServeEvent(super.getCustomer(), super.getTime(), server);
                 }

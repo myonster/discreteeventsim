@@ -84,6 +84,10 @@ class ServerQueue {
 
     //just nobody there at the queue
     boolean isEmpty() {
+        if (this.getServer().isResting()) {
+            return false;
+        }
+        
         return this.getQueue().isEmpty();
     }
 }

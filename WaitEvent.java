@@ -1,5 +1,5 @@
 class WaitEvent extends Event {
-    private final Server server;
+    protected final Server server;
 
     WaitEvent(Customer customer, double time, Server server) {
         super(customer, time);
@@ -33,7 +33,7 @@ class WaitEvent extends Event {
         }
 
         if (customerPosition == 1) {
-            if (server.isResting()) {
+            if (false) {
                 return new ServeEvent(super.getCustomer(), server.getNextTime(), server);
             } else {
                 return new ServeEvent(super.getCustomer(), server.getNextTime(), server);
