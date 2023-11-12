@@ -2,6 +2,7 @@ class ServerQueue {
     //this is basically a pair class on steroids
     private final Pair<Server, ImList<Customer>> serverQueuePair;
     private final int maxQueueSize;
+    private final double totalWaitTime;
 
     // Note Server Template is 
     // -> Server(int id, double nextTime, boolean isServing, boolean isResting)
@@ -9,6 +10,13 @@ class ServerQueue {
     ServerQueue(Pair<Server, ImList<Customer>> serverQueue, int qmax) {
         this.serverQueuePair = serverQueue;
         this.maxQueueSize = qmax;
+        this.totalWaitTime = 0;
+    }
+
+    ServerQueue(Pair<Server, ImList<Customer>> serverQueue, int qmax, double wt) {
+        this.serverQueuePair = serverQueue;
+        this.maxQueueSize = qmax;
+        this.totalWaitTime = wt;
     }
 
     Server getServer() {
@@ -23,6 +31,16 @@ class ServerQueue {
         return this.maxQueueSize;
     }
 
+    double getWaitTime() {
+        return this.totalWaitTime;
+    }
+
+    ServerQueue addWaitTime(double time) {
+        return new ServerQueue(this.serverQueuePair,
+            this.maxQueueSize, this.totalWaitTime + time);
+    }
+
+
     ServerQueue addToQueue(Customer customer) {
         //catching bug
         if (!this.ableToServe()) {
@@ -36,7 +54,7 @@ class ServerQueue {
         Server server = this.getServer(); // We dont touch server at all bec is just adding queue
         
         return new ServerQueue(new Pair<Server, ImList<Customer>>(server, customerQueue), 
-            this.maxQueueSize);
+            this.maxQueueSize, this.totalWaitTime);
 
     }
 
@@ -48,7 +66,7 @@ class ServerQueue {
         server = server.updateServingStatus(false);
 
         return new ServerQueue(new Pair<Server, ImList<Customer>>(server, customerQueue), 
-            this.maxQueueSize);
+            this.maxQueueSize, this.totalWaitTime);
     }
 
     ServerQueue serve(double time) {
@@ -72,7 +90,7 @@ class ServerQueue {
         server = server.addTime(time + customerGettingServed.getServiceTime());
         
         return new ServerQueue(new Pair<Server, ImList<Customer>>(server, customerQueue), 
-            this.maxQueueSize);
+            this.maxQueueSize, this.totalWaitTime);
     }
 
     //this function just tells us that a customer can be slotted in. nothing else
@@ -88,7 +106,7 @@ class ServerQueue {
         if (this.getServer().isResting()) {
             return false;
         }
-        
+
         return this.getQueue().isEmpty();
     }
 }

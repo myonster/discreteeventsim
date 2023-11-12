@@ -59,12 +59,12 @@ class Simulator {
                 pqEvents = pqEvents.poll().second().add(event.nextEvent(shop));
             }
         }
-        // for (ServerQueue i : shop.getList()) {
-        //     waitTime += i.getWaitTime();
-        // }
-        // if (served > 0) {
-        //     waitTime = waitTime / served;
-        // }
+        for (ServerQueue i : shop) {
+            waitTime += i.getWaitTime();
+        }
+        if (served > 0) {
+            waitTime = waitTime / served;
+        }
 
         return String.format("%s[%.3f %d %d]",output, waitTime, served, left);
     }

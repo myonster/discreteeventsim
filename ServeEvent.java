@@ -16,6 +16,9 @@ class ServeEvent extends Event {
         ServerQueue servingServerQueue = shop.get(serverIndex);
 
         servingServerQueue = servingServerQueue.serve(super.getTime());
+        servingServerQueue = servingServerQueue
+            .addWaitTime(super.getTime() - super.getCustomer().getArrivalTime());
+
         newShop = newShop.set(serverIndex, servingServerQueue);
 
         return newShop;

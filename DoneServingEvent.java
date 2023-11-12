@@ -21,6 +21,7 @@ class DoneServingEvent extends Event {
         Server doneServer = servingServerQueue.getServer();
         ImList<Customer> doneQueue = servingServerQueue.getQueue();
         int maxQueueSize = servingServerQueue.getMaxQueueSize();
+        double waitTime = servingServerQueue.getWaitTime();
 
         double restTime = doneServer.getRestTime();
         //System.out.println(super.getTime() + " rest time is: " + restTime);
@@ -31,7 +32,8 @@ class DoneServingEvent extends Event {
             doneServer = doneServer.updateRestingStatus(true);
             doneServer = doneServer.addTime(super.getTime() + restTime);
             servingServerQueue = new ServerQueue(
-                new Pair<Server, ImList<Customer>>(doneServer, doneQueue), maxQueueSize);
+                new Pair<Server, ImList<Customer>>(doneServer, doneQueue),
+                maxQueueSize, waitTime);
             
             newShop = newShop.set(serverIndex, servingServerQueue);
             //System.out.println(super.getTime() + " Server " + doneServer.toString() 
