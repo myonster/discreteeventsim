@@ -13,9 +13,8 @@ class ServeEvent extends Event {
         ImList<ServerQueue> newShop = shop;
 
         ServerQueue servingServerQueue = shop.get(serverIndex);
-        System.out.println(servingServerQueue.getQueue());
 
-        servingServerQueue = servingServerQueue.serve();
+        servingServerQueue = servingServerQueue.serve(super.getTime());
         newShop = newShop.set(serverIndex, servingServerQueue);
 
         return newShop;
@@ -28,7 +27,7 @@ class ServeEvent extends Event {
         ServerQueue servingServerQueue = shop.get(serverIndex);
         double nextTime = servingServerQueue.getServer().getNextTime();
 
-        return new DoneEvent(super.getCustomer(), nextTime, servingServerQueue.getServer());
+        return new DoneServingEvent(super.getCustomer(), nextTime, servingServerQueue.getServer());
     }
 
     @Override

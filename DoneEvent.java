@@ -1,9 +1,7 @@
 class DoneEvent extends Event {
-    private final Server server;
-
-    DoneEvent(Customer customer, double time, Server server) {
+    
+    DoneEvent (Customer customer, double time) {
         super(customer, time);
-        this.server = server;
     }
     
     @Override
@@ -13,8 +11,6 @@ class DoneEvent extends Event {
 
     @Override
     public Event nextEvent(ImList<ServerQueue> shop) {
-        //Reserved for RestEvent
-
         return this;
     }
 
@@ -24,14 +20,13 @@ class DoneEvent extends Event {
     }
 
     @Override
-    public boolean isServiceProvided() {
+    public boolean isServiceProvided(){
         return true;
     }
-    
+
     @Override
     public String toString() {
-        return String.format("%.3f %s done serving by %s\n",
-            super.getTime(), super.getCustomer().toString(), this.server.toString());
+        return "";
     }
-
 }
+

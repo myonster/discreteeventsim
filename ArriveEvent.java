@@ -11,20 +11,22 @@ class ArriveEvent extends Event {
         // Customer that arrives will look at shop
         // Looks at which is empty from 1 -> n (Regardeless of if Server is Resting)
         for (ServerQueue sq: shop) {
-            if (sq.isEmpty()) {
-                int serverIndex = sq.getServer().getID();
+            if (sq.getQueue().isEmpty()) {
+                int serverIndex = sq.getServer().getID() - 1;
 
                 //This is where we slot in our Customer into ServerQueue
+                //System.out.println("is empty");
 
                 tempShop = tempShop.set(serverIndex, sq.addToQueue(super.getCustomer()));
                 return tempShop;
+
             }
         }
 
         // Looks at which one can serve? (Regardeless of if Server is Resting)
         for (ServerQueue sq: shop) {
             if (sq.ableToServe()) {
-                int serverIndex = sq.getServer().getID();
+                int serverIndex = sq.getServer().getID() - 1;
 
                 //This is where we slot in our Customer into ServerQueue
 
@@ -33,6 +35,7 @@ class ArriveEvent extends Event {
             }
         }
 
+        // System.out.println("we left");
         // when we do this -> essentially customer is not added in!
         return shop;
     }
@@ -50,7 +53,8 @@ class ArriveEvent extends Event {
             for (Customer customer: customerQueue) {
                 if (customerID == customer.getID()) {
                     inShop = true;
-                    customerPosition = customerQueue.indexOf(customer); // 0 if its at front 
+                    customerPosition = customerQueue.indexOf(customer); // 0 if its at front
+                    System.out.println(customerPosition); 
                     servingSQ = sq;
                     break;
                 }
@@ -62,13 +66,13 @@ class ArriveEvent extends Event {
         if (inShop) {
             if (customerPosition == 0) {
                 if (server.isResting()) {
-                    //return new WaitEvent(super.getCustomer(), super.getTime(), server);
+                    return new ServeEvent(super.getCustomer(), server.getNextTime(), server);
                 } else {
                     return new ServeEvent(super.getCustomer(), super.getTime(), server);
                 }
 
             } else {
-                //return new WaitEvent(super.getCustomer(), super.getTime(), server);
+                return new WaitEvent(super.getCustomer(), super.getTime(), server);
             }
         }
 

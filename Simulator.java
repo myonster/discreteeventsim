@@ -31,11 +31,10 @@ class Simulator {
         for (int i = 1; i <= numOfServers; i++) {
             ImList<Customer> emptyQueue = new ImList<Customer>();
             Pair<Server, ImList<Customer>> serverQueuePair = new Pair<Server, ImList<Customer>>(
-                new Server(i), emptyQueue);
+                new Server(i, this.restTimes), emptyQueue);
 
             shop = shop.add(new ServerQueue(serverQueuePair, this.qmax));
         }
-
 
         PQ<Event> pqEvents = new PQ<Event>(new EventComp());
         for (int i = 0; i < arrivalTimes.size(); i++) {
@@ -45,7 +44,6 @@ class Simulator {
 
         while (!pqEvents.isEmpty()) {
             Event event = pqEvents.poll().first();
-
             shop = event.updateShop(shop);
             output += event.toString();
 

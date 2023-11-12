@@ -18,6 +18,10 @@ class ServerQueue {
         return this.serverQueuePair.second();
     }
 
+    int getMaxQueueSize() {
+        return this.maxQueueSize;
+    }
+
     ServerQueue addToQueue(Customer customer) {
         //catching bug
         if (!this.ableToServe()) {
@@ -35,7 +39,18 @@ class ServerQueue {
 
     }
 
-    ServerQueue serve() {
+    ServerQueue doneServe() {
+        Server server = this.getServer();
+        ImList<Customer> customerQueue = this.getQueue();
+        customerQueue = customerQueue.remove(0);
+
+        server = server.updateServingStatus(false);
+
+        return new ServerQueue(new Pair<Server, ImList<Customer>>(server, customerQueue), 
+            this.maxQueueSize);
+    }
+
+    ServerQueue serve(double time) {
         // Take out the first customer from queue
         // Server that customer by removign from queue and adding to nextTime in Server
 
@@ -50,16 +65,20 @@ class ServerQueue {
 
         //Remove the customer from the Customer Queue
         ImList<Customer> customerQueue = this.getQueue();
-        customerQueue = customerQueue.remove(0);
+        //customerQueue = customerQueue.remove(0);
 
-        server = server.addTime(customerGettingServed.getServiceTime());
-
+        server = server.updateServingStatus(true);
+        server = server.addTime(time + customerGettingServed.getServiceTime());
+        
         return new ServerQueue(new Pair<Server, ImList<Customer>>(server, customerQueue), 
             this.maxQueueSize);
     }
 
     //this function just tells us that a customer can be slotted in. nothing else
     boolean ableToServe() {
+        if (this.getServer().isServing()) {
+            return (this.getQueue().size() < this.maxQueueSize + 1);
+        }
         return (this.getQueue().size() < this.maxQueueSize + 1);
     }
 
