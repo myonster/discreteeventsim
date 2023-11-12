@@ -1,31 +1,32 @@
 class LeaveEvent extends Event {
     
-    LeaveEvent(Customer customer) {
-        super(customer, customer.getArrivalTime());
+    LeaveEvent(Customer customer, double time) {
+        super(customer, time);
     }
-
+    
     @Override
-    public Event nextEvent(Shop shop) {
-        return this;
-    }
-
-    @Override
-    public Shop updateShop(Shop shop) {
+    public ImList<ServerQueue> updateShop(ImList<ServerQueue> shop) {
         return shop;
     }
 
     @Override
-    public boolean isDone() {
+    public Event nextEvent(ImList<ServerQueue> shop) {
+        return this;
+    }
+
+    @Override
+    public boolean isDone(){
         return true;
     }
 
-    public boolean isServiceProvided() {
+    @Override
+    public boolean isServiceProvided(){
         return false;
     }
 
     @Override
     public String toString() {
         return String.format("%.3f %s leaves\n", 
-            this.getTime(), this.getCustomer().toString());
+            super.getTime(), super.getCustomer().toString());
     }
 }

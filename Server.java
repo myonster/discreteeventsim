@@ -1,40 +1,47 @@
-import java.util.function.Supplier;
-
 class Server {
     private final int id;
     private final double nextTime;
-    private final Supplier<Double> restTime;
+    private final boolean isServing;
+    private final boolean isResting;
 
-    Server(int id, Supplier<Double> restTime) {
+    Server(int id) {
         this.id = id;
         this.nextTime = 0;
-        this.restTime = restTime;
+        this.isServing = false;
+        this.isResting = false;
     }
 
-    Server(int id, double nextTime, Supplier<Double> restTime) {
+    Server(int id, double nextTime, boolean isServing, boolean isResting) {
         this.id = id;
         this.nextTime = nextTime;
-        this.restTime = restTime;
+        this.isServing = isServing;
+        this.isResting = isResting;
     }
 
     int getID() {
         return this.id;
     }
 
-    double getTime() {
+    double getNextTime() {
         return this.nextTime;
     }
 
-    Server serve(double serviceTime) {
-        return new Server(this.id, serviceTime, this.restTime);
+    boolean isServing() {
+        return this.isServing;
     }
 
-    double rest() {
-        return this.restTime.get();
+    boolean isResting() {
+        return this.isResting;
     }
+
+    Server addTime(double time) {
+        return new Server(this.id, this.nextTime + time, this.isServing(), this.isResting());
+    }
+
+
 
     @Override
     public String toString() {
-        return String.format("%d", this.id);
+        return String.format("%s", this.id);
     }
 }

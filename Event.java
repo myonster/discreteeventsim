@@ -16,9 +16,9 @@ abstract class Event {
     }
 
 
-    abstract Event nextEvent(Shop shop);
+    abstract Event nextEvent(ImList<ServerQueue> shop);
 
-    abstract Shop updateShop(Shop shop);
+    abstract ImList<ServerQueue> updateShop(ImList<ServerQueue> shop);
 
     abstract boolean isDone();
 

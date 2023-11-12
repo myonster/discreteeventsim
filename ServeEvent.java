@@ -1,38 +1,33 @@
 class ServeEvent extends Event {
-    private final ServerQueue serverQueue;
-    //private final double serviceTime;
+    private final Server server;
 
-    ServeEvent(Customer customer, double time, ServerQueue serverQueue) {
+    ServeEvent(Customer customer, double time, Server server) {
         super(customer, time);
-        this.serverQueue = serverQueue;
-        //this.serviceTime = customer.getServiceTime();
+        this.server = server;
     }
 
     @Override
-    public Shop updateShop(Shop shop) {
-        // takes out a server from a shop -> makes him busy
-        ServerQueue sq = shop.getServerQueueByID(this.serverQueue.getServer().getID());     
+    public ImList<ServerQueue> updateShop(ImList<ServerQueue> shop) {
 
-        ServerQueue updatedSQ =  sq; //this.serverQueue;
-        updatedSQ = updatedSQ.serve(super.getTime() + super.getCustomer().getServiceTime());
-        updatedSQ = updatedSQ.notAtCounter();
-        updatedSQ = updatedSQ.addWaitTime(super.getTime() - super.getCustomer().getArrivalTime());
+        int serverIndex = this.server.getID() - 1;
+        ImList<ServerQueue> newShop = shop;
 
-        //System.out.println("\n");
-        //System.out.println(this.getTime() + " SERVING : " + shop.toString());
-        //System.out.println(this.getTime() + " resting ? : " + updatedSQ.isResting());
+        ServerQueue servingServerQueue = shop.get(serverIndex);
 
-        if (updatedSQ.getQueueSize() < 0) {
-            updatedSQ = updatedSQ.addToQueue();
-        }
-        
-        return shop.updateServerQueueInShop(updatedSQ);
+        servingServerQueue = servingServerQueue.serve();
+        newShop = newShop.set(serverIndex, servingServerQueue);
+
+        return newShop;
     }
 
     @Override
-    public Event nextEvent(Shop shop) {
-        return new DoneEvent(this.getCustomer(), 
-        shop.getServerQueueByID(this.serverQueue.getServer().getID()));
+    public Event nextEvent(ImList<ServerQueue> shop) {
+        int serverIndex = this.server.getID() - 1;
+
+        ServerQueue servingServerQueue = shop.get(serverIndex);
+        double nextTime = servingServerQueue.getServer().getNextTime();
+
+        return new DoneEvent(super.getCustomer(), nextTime, servingServerQueue.getServer());
     }
 
     @Override
@@ -48,6 +43,6 @@ class ServeEvent extends Event {
     @Override
     public String toString() {
         return String.format("%.3f %s serves by %s\n",
-            this.getTime(), this.getCustomer().toString(), this.serverQueue.getServer().toString());
-    }
+            this.getTime(), this.getCustomer().toString(), this.server.toString());
+    }    
 }

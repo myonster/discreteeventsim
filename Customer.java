@@ -10,6 +10,10 @@ class Customer {
         this.arrivalTime = arrivalTime;
         this.serviceTime = serviceTime;
     }
+
+    int getID() {
+        return this.id;
+    }
  
     double getArrivalTime() {
         return this.arrivalTime;
@@ -21,7 +25,7 @@ class Customer {
 
     @Override
     public String toString() {
-        return String.format("%s",this.id);
+        return String.format("%s", this.id);
     }
 
 }

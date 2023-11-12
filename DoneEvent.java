@@ -1,34 +1,20 @@
 class DoneEvent extends Event {
-    private final ServerQueue serverQueue;
+    private final Server server;
 
+    DoneEvent(Customer customer, double time, Server server) {
+        super(customer, time);
+        this.server = server;
+    }
     
-    DoneEvent(Customer customer, ServerQueue serverQueue) {
-        super(customer, serverQueue.getServer().getTime());
-        this.serverQueue = serverQueue;
+    @Override
+    public ImList<ServerQueue> updateShop(ImList<ServerQueue> shop) {
+        return shop;
     }
 
     @Override
-    public Shop updateShop(Shop shop) {
-        ServerQueue sq = shop.getServerQueueByID(this.serverQueue.getServer().getID());
-        ServerQueue updatedSQ = sq; //this.serverQueue;
-        updatedSQ = updatedSQ.backAtCounter();
-        //System.out.println(this.getTime() + " Before rest: " +updatedSQ.getServer().getTime());
-        
-        double restTime = updatedSQ.getRest();
-        //System.out.println(this.getTime() + " restTime: " + restTime);
-        if (restTime > 0) {
-            updatedSQ = updatedSQ.rest(restTime);
-        }
-        //System.out.println("[Done] " + this.getTime() 
-        //+ " Shop: " + shop.toString() + " || \n" + "ServerQueue: "  
-        //+ updatedSQ.toString() + "\n");
-        //System.out.println(this.getTime() + " After rest: " +
-        //updatedSQ.getServer().getTime() + "\n");
-        return shop.updateServerQueueInShop(updatedSQ); 
-    }
+    public Event nextEvent(ImList<ServerQueue> shop) {
+        //Reserved for RestEvent
 
-    @Override
-    public Event nextEvent(Shop shop) {
         return this;
     }
 
@@ -45,7 +31,7 @@ class DoneEvent extends Event {
     @Override
     public String toString() {
         return String.format("%.3f %s done serving by %s\n",
-            this.getTime(), this.getCustomer().toString(), this.serverQueue.getServer().toString());
+            this.getTime(), this.getCustomer().toString(), this.server.toString());
     }
 
 }
