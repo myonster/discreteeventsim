@@ -4,27 +4,29 @@ class AutoQueue implements QueueSystem {
     private final ImList<Customer> customerQueue;
     private final ImList<Pair<Server, Integer>> serversList; 
     private final double totalWaitTime;
+    private final int maxQueueSize;
     //this is basically a pair class on steroids
     // Note Server Template is 
     // -> Server(int id, double nextTime, boolean isServing, boolean isResting)
     
     //constructor for Simulator -> headId will be servers k + 1
-    AutoQueue(ImList<Pair<Server, Integer>> serversList) {
+    AutoQueue(ImList<Pair<Server, Integer>> serversList, int maxQueueSize) {
         this.headId = 0;
         this.serversList = serversList;
         this.totalWaitTime = 0;
-
         this.customerQueue = new ImList<Customer>();
+        this.maxQueueSize = maxQueueSize;
     }
 
     AutoQueue(int headId, ImList<Customer> customerQueue,
         ImList<Pair<Server, Integer>> serversList, 
-        double waitTime) {
+        double waitTime, int maxQueueSize) {
 
         this.headId = headId;
         this.customerQueue = customerQueue;
         this.serversList = serversList;
         this.totalWaitTime = waitTime;
+        this.maxQueueSize = maxQueueSize;
     }
 
     //utility function
@@ -66,7 +68,7 @@ class AutoQueue implements QueueSystem {
 
     @Override
     public int getMaxQueueSize() {
-        return 0;  
+        return this.maxQueueSize; 
     }
 
     @Override
@@ -89,7 +91,7 @@ class AutoQueue implements QueueSystem {
     @Override
     public QueueSystem addWaitTime(double time) {
         return new AutoQueue(this.headId, this.customerQueue,
-            this.serversList, time);
+            this.serversList, this.totalWaitTime + time, this.maxQueueSize);
     }
 
     @Override
@@ -120,7 +122,7 @@ class AutoQueue implements QueueSystem {
         templist = templist.add(customer);
 
         return new AutoQueue(this.headId, templist, 
-            this.serversList, this.totalWaitTime);
+            this.serversList, this.totalWaitTime, this.maxQueueSize);
     }
 
     @Override
@@ -140,7 +142,7 @@ class AutoQueue implements QueueSystem {
             index++;
         }
         return new AutoQueue(this.headId, this.customerQueue,
-            tempSL, this.totalWaitTime);
+            tempSL, this.totalWaitTime, this.maxQueueSize);
     }
 
     @Override
@@ -164,13 +166,16 @@ class AutoQueue implements QueueSystem {
             index++;
         }
         return new AutoQueue(this.headId, this.customerQueue.remove(0),
-            tempSL, this.totalWaitTime);
+            tempSL, this.totalWaitTime, this.maxQueueSize);
     }
 
     //this function just tells us that a customer can be slotted in. nothing else
     @Override
     public boolean ableToServe() {
-        return true;
+        if (this.isEmpty()) {
+            return true;
+        }
+        return (this.customerQueue.size() < this.maxQueueSize);
     }
 
     //just nobody there at the queue

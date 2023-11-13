@@ -75,13 +75,10 @@ class ArriveEvent extends Event {
         for (QueueSystem sq: shop) {
             ImList<Customer> customerQueue = sq.getQueue();
             
-            if (sq.isAutomated()) {
-                selfcheck = true;
-            }
-
             for (Customer customer: customerQueue) {
                 if (customerID == customer.getID()) {
                     inShop = true;
+                    selfcheck = sq.isAutomated();
                     customerPosition = customerQueue.indexOf(customer); // 0 if its at front
                     break;
                 }

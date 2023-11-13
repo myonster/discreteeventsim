@@ -44,7 +44,7 @@ class Simulator {
                 templist = templist.add(new Pair<Server, Integer>(server, 0));
             }
             
-            shop = shop.add(new AutoQueue(templist));
+            shop = shop.add(new AutoQueue(templist, this.qmax));
         }
 
         PQ<Event> pqEvents = new PQ<Event>(new EventComp());
