@@ -26,6 +26,18 @@ class Server {
         this.human = true;
     }
 
+    Server(int id, double nextTime, boolean isServing, boolean isResting,
+        Supplier<Double> rt, boolean ai) {
+
+        this.id = id;
+        this.nextTime = nextTime;
+        this.isServing = isServing;
+        this.isResting = isResting;
+        this.restTime = rt;
+        this.human = ai;
+    }
+
+
     //Constructor for AI
     Server(int id, Supplier<Double> restTime, boolean ai) {
         this.id = id;
@@ -36,6 +48,10 @@ class Server {
         this.human = ai;
     }
 
+    boolean isHuman() {
+        return this.human;
+    }
+    
     int getID() {
         return this.id;
     }
@@ -57,20 +73,23 @@ class Server {
     }
 
     Server addTime(double time) {
-        return new Server(this.id, time, this.isServing(), this.isResting(), this.restTime);
+        return new Server(this.id, time, this.isServing(), this.isResting(),
+            this.restTime, this.human);
     }
 
     Server updateServingStatus(boolean status) {
-        return new Server(this.id, this.nextTime, status, this.isResting(), this.restTime);
+        return new Server(this.id, this.nextTime, status, this.isResting(),
+            this.restTime, this.human);
     }
 
     Server updateRestingStatus(boolean status) {
-        return new Server(this.id, this.nextTime, this.isServing(), status, this.restTime);
+        return new Server(this.id, this.nextTime, this.isServing(), status,
+            this.restTime, this.human);
     }
 
     @Override
     public String toString() {
-        if (!this.human) {
+        if (!human) {
             return String.format("self-check %s", this.id);
         }
 

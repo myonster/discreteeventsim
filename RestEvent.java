@@ -13,9 +13,13 @@ class RestEvent extends Event {
 
         QueueSystem servingQueueSystem = shop.get(serverIndex);
 
-        Server doneServer = servingQueueSystem.getServer();
+        Server doneServer = servingQueueSystem.getServer(
+                super.getCustomer().getID());
+
         ImList<Customer> doneQueue = servingQueueSystem.getQueue();
-        int maxQueueSize = servingQueueSystem.getMaxQueueSize();
+        int maxQueueSize = servingQueueSystem
+            .getMaxQueueSize();
+
         double waitTime = servingQueueSystem.getWaitTime();
 
         doneServer = doneServer.updateRestingStatus(false);

@@ -25,9 +25,24 @@ class ServerQueue implements QueueSystem {
     }
 
     @Override
-    public Server getServer() {
+    public Server getServer(int id) {
         return this.serverQueuePair.first();
     }
+
+    @Override
+    public Server optimalServer() {
+        return this.getServer();
+    }
+    
+    @Override
+    public double getNextTime() {
+        return this.getServer().getNextTime();
+    }
+
+    Server getServer() {
+        return this.serverQueuePair.first();
+    }
+
 
     @Override
     public ImList<Customer> getQueue() {
@@ -69,7 +84,7 @@ class ServerQueue implements QueueSystem {
     }
 
     @Override
-    public QueueSystem doneServe() {
+    public QueueSystem doneServe(Customer customer) {
         Server server = this.getServer();
         ImList<Customer> customerQueue = this.getQueue();
         customerQueue = customerQueue.remove(0);
@@ -81,7 +96,7 @@ class ServerQueue implements QueueSystem {
     }
 
     @Override
-    public QueueSystem serve(double time) {
+    public QueueSystem serve(double time, Customer customer) {
         // Take out the first customer from queue
         // Server that customer by removign from queue and adding to nextTime in Server
 

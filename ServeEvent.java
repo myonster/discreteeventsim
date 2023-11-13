@@ -1,9 +1,11 @@
 class ServeEvent extends Event {
     private final int serverID;
+    private final QueueSystem queue;
 
-    ServeEvent(Customer customer, double time, int serverID) {
+    ServeEvent(Customer customer, double time, int serverID, QueueSystem qu) {
         super(customer, time);
         this.serverID = serverID;
+        this.queue = qu;
     }
 
     @Override
@@ -14,7 +16,8 @@ class ServeEvent extends Event {
 
         QueueSystem servingQueueSystem = shop.get(this.serverID - 1);
 
-        servingQueueSystem = servingQueueSystem.serve(super.getTime());
+        servingQueueSystem = servingQueueSystem.serve(
+            super.getTime(), super.getCustomer());
         servingQueueSystem = servingQueueSystem
             .addWaitTime(super.getTime() - super.getCustomer().getArrivalTime());
 
@@ -27,9 +30,11 @@ class ServeEvent extends Event {
     public Event nextEvent(ImList<QueueSystem> shop) {
 
         QueueSystem servingQueueSystem = shop.get(this.serverID - 1);
-        double nextTime = servingQueueSystem.getServer().getNextTime();
+        double nextTime = servingQueueSystem
+            .getServer(super.getCustomer().getID()).getNextTime();
 
-        return new DoneServingEvent(super.getCustomer(), nextTime, this.serverID);
+        return new DoneServingEvent(super.getCustomer(), nextTime, this.serverID,
+            servingQueueSystem);
     }
 
     @Override
@@ -44,8 +49,9 @@ class ServeEvent extends Event {
 
     @Override
     public String toString() {
+        Server server = this.queue.optimalServer();
 
-        return String.format("%.3f %s serves by %d\n",
-            this.getTime(), this.getCustomer().toString(), this.serverID);
+        return String.format("%.3f %s serves by %s\n",
+            this.getTime(), this.getCustomer().toString(), server.toString());
     }    
 }

@@ -36,15 +36,16 @@ class Simulator {
             shop = shop.add(new ServerQueue(serverQueuePair, this.qmax));
         }
 
-        // // FOR SELF CHECK SERVERS
-        // for (int i = 1; i <= numOfSelfChecks; i++) {
-        //     ImList<Customer> emptyQueue = new ImList<Customer>();
+        // FOR SELF CHECK SERVERS
+        if (this.numOfSelfChecks > 0) {
+            ImList<Pair<Server, Integer>> templist = new ImList<Pair<Server,Integer>>();
+            for (int i = 1; i <= numOfSelfChecks; i++) {
+                Server server = new Server(this.numOfServers + i, () -> 0.0, false);
+                templist = templist.add(new Pair<Server, Integer>(server, 0));
+            }
             
-        //     Pair<Server, ImList<Customer>> serverQueuePair = new Pair<Server, ImList<Customer>>(
-        //         new AutoServer(numOfServers + i, this.restTimes), emptyQueue);
-
-        //     shop = shop.add(new ServerQueue(serverQueuePair, 1000));
-        // }
+            shop = shop.add(new AutoQueue(templist));
+        }
 
         PQ<Event> pqEvents = new PQ<Event>(new EventComp());
         for (int i = 0; i < arrivalTimes.size(); i++) {

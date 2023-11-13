@@ -1,7 +1,9 @@
 interface QueueSystem {
     boolean isAutomated();
 
-    Server getServer();
+    Server getServer(int id);
+
+    Server optimalServer();
 
     ImList<Customer> getQueue();
 
@@ -9,13 +11,15 @@ interface QueueSystem {
 
     double getWaitTime();
 
+    double getNextTime();
+
     QueueSystem addWaitTime(double time);
 
     QueueSystem addToQueue(Customer customer);
 
-    QueueSystem doneServe();
+    QueueSystem doneServe(Customer customer);
 
-    QueueSystem serve(double time);
+    QueueSystem serve(double time, Customer customer);
 
     boolean ableToServe();
 

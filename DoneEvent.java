@@ -13,7 +13,8 @@ class DoneEvent extends Event {
 
         QueueSystem servingQueueSystem = shop.get(serverIndex);
 
-        servingQueueSystem = servingQueueSystem.doneServe(); //this is a heavy operation
+        servingQueueSystem = servingQueueSystem.doneServe(
+            super.getCustomer()); //this is a heavy operation
         newShop = newShop.set(serverIndex, servingQueueSystem);
 
         return newShop;
