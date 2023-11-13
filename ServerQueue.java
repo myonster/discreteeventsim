@@ -24,6 +24,11 @@ class ServerQueue implements QueueSystem {
         this.totalWaitTime = wt;
     }
 
+    //utility function
+    Server getServer() {
+        return this.serverQueuePair.first();
+    }
+
     @Override
     public Server getServer(int id) {
         return this.serverQueuePair.first();
@@ -38,11 +43,6 @@ class ServerQueue implements QueueSystem {
     public double getNextTime() {
         return this.getServer().getNextTime();
     }
-
-    Server getServer() {
-        return this.serverQueuePair.first();
-    }
-
 
     @Override
     public ImList<Customer> getQueue() {
